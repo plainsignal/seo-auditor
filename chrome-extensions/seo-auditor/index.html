@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SEO Auditor — On-Page SEO Checker and Analyzer Chrome Extension - prevue.me</title>
+  <meta name="description" content="SEO Auditor Chrome Extension - Perform instant on-page SEO audits directly in your browser with full meta, headings, images, indexing, links and accessibility analysis. 100% privacy-first, open-source.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index,follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SEO Auditor - Chrome Extension" />
+  <meta property="og:description" content="Instant on-page SEO audits directly inside your browser. Analyze meta tags, headings, images, indexing, links, structured data & more." />
+  <meta property="og:url" content="https://prevue.me/chrome-extensions/seo-auditor/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://prevue.me/chrome-extensions/seo-auditor/assets/og-1200x630.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SEO Auditor - Chrome Extension" />
+  <meta name="twitter:description" content="Privacy-first SEO audit extension for Chrome. Analyze meta, headings, links, images, indexing & accessibility directly in your browser." />
+  <meta name="twitter:image" content="https://prevue.me/chrome-extensions/seo-auditor/assets/og-1200x630.png" />
+  <link rel="icon" href="/favicon.ico" />
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SEO Auditor - Chrome Extension",
+    "operatingSystem": "Google Chrome",
+    "applicationCategory": "BrowserExtension",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "description": "SEO Auditor Chrome Extension: Perform instant on-page SEO audits inside your browser. Meta, headings, links, images, indexing, accessibility, and more.",
+    "url": "https://prevue.me/chrome-extensions/seo-auditor/",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Prevue.me",
+        "url": "https://prevue.me/"
+    },
+    "privacyPolicy": "https://prevue.me/chrome-extensions/seo-auditor/privacy.html",
+    "softwareHelp": "https://github.com/plainsignal/seo-auditor"
+    }
+  </script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+      color: #334155;
+    }
+    header {
+      background: #131313;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.6rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2563eb;
+      margin-top: 2rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+    .cta {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    .cta a {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 0.4rem;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+    footer {
+      text-align: center;
+      margin: 2rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .footer-links {
+      margin-top: 1rem;
+    }
+    .footer-links a {
+      color: #2563eb;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>SEO Auditor — On-Page SEO Checker and Analyzer</header>
+
+<div class="container">
+
+  <p>Instant SEO Audit. Full Analysis. Zero Guesswork.</p>
+  <p><strong>SEO Auditor</strong> is your powerful all-in-one Chrome extension that provides deep, structured, and real-time SEO audits directly on any webpage — fully client-side, privacy-friendly, fast, and actionable.</p>
+  <p>Whether you're a website owner, SEO consultant, developer, marketer, or agency — SEO Auditor empowers you to optimize your pages effortlessly with scientific, well-structured insights.</p>
+
+  <h2>Key Features At a Glance</h2>
+
+  <h3>Meta Tag Analyzer</h3>
+  <ul>
+    <li>Analyze & validate all critical meta tags</li>
+    <li>Title & Description length checker</li>
+    <li>Canonical, Robots, Open Graph, Twitter Card, JSON-LD, Viewport, Charset, Language, Favicon checks</li>
+  </ul>
+
+  <h3>Headings Structure Audit</h3>
+  <ul>
+    <li>H1-H6 hierarchy, missing/multiple H1 detection, heading depth structure</li>
+  </ul>
+
+  <h3>Image Optimization Audit</h3>
+  <ul>
+    <li>Alt attribute detection, missing alt tags, missing srcset attributes</li>
+  </ul>
+
+  <h3>Link Analysis (Internal & External)</h3>
+  <ul>
+    <li>Total, internal, external, nofollow, target, unique URLs, empty & short anchor text detection</li>
+  </ul>
+
+  <h3>Indexability & Crawlability</h3>
+  <ul>
+    <li>Robots meta tag parsing, robots.txt fetch, sitemap.xml parse, sitemap inclusion check</li>
+  </ul>
+
+  <h3>Accessibility Signals</h3>
+  <ul>
+    <li>HTML lang, image alt coverage, heading structure validation</li>
+  </ul>
+
+  <h3>Content Depth Analysis</h3>
+  <ul>
+    <li>Word count, character count, thin content flags</li>
+  </ul>
+
+  <h3>Technical SEO Checks</h3>
+  <ul>
+    <li>Charset, Viewport, Structured data (JSON-LD), Open Graph, social metadata completeness</li>
+  </ul>
+
+  <h3>Full Audit Scoring & Suggestions</h3>
+  <ul>
+    <li>Color-coded results (good, ⚠ warning, ❌ error)</li>
+    <li>Detailed explanations, tooltips, official documentation links (Google, Web.dev, W3C, Schema.org, Mozilla)</li>
+  </ul>
+
+  <h3>Modern Lighthouse-style UI</h3>
+  <ul>
+    <li>Tabbed navigation: Overview, Meta, Indexing, Headings, Images, Links, Accessibility, Tools</li>
+    <li>Sub-tab navigation for images & links</li>
+  </ul>
+
+  <h3>Exportable & Shareable (coming soon)</h3>
+  <ul>
+    <li>Export full audit reports & copy audit blocks</li>
+  </ul>
+
+  <h3>External Tools Integration</h3>
+  <ul>
+    <li>Google PageSpeed Insights, Mobile-Friendly Test, Rich Results Test, Prevue Open Graph Preview</li>
+  </ul>
+
+  <h3>Privacy-First & Offline-First</h3>
+  <ul>
+    <li>No servers, 100% local browser analysis, zero tracking, GDPR & CCPA friendly</li>
+  </ul>
+
+  <h3>Zero Setup Required</h3>
+  <ul>
+    <li>No configuration needed, works instantly on any page</li>
+  </ul>
+
+  <h3>Who Is This For?</h3>
+  <ul>
+    <li>SEO Specialists, Web Developers, Digital Agencies, E-commerce Managers, SaaS Businesses, Bloggers, UX Auditors</li>
+  </ul>
+
+  <h2>Why SEO Auditor is Different</h2>
+  <ul>
+    <li>100% Instant Audit — one click, fully automatic</li>
+    <li>No third-party servers — your data stays secure</li>
+    <li>Professional-grade audits for experts & beginners</li>
+    <li>Google-compliant audits — based on official SEO guidelines</li>
+    <li>Modern, beautiful and highly readable UI</li>
+  </ul>
+
+  <h2>Technical Details</h2>
+  <ul>
+    <li>Chrome Manifest v3 Compliant</li>
+    <li>Lightweight permissions</li>
+    <li>No background tracking</li>
+    <li>Built with modern JavaScript (ES2022)</li>
+    <li>Supports Chrome, Brave, Edge, and Chromium-based browsers</li>
+  </ul>
+
+  <h2>SEO Analyzer Web App (also available)</h2>
+  <p>Don’t want to install a Chrome extension? Use our fully standalone SEO Analyzer Web App — with the same full audit experience inside your browser without installation.</p>
+
+  <h2>Grow Your SEO Confidence</h2>
+  <p>Whether you're launching, optimizing, auditing for clients, or troubleshooting SEO issues — SEO Auditor is your perfect companion.</p>
+
+  <h2>100% Privacy First. 100% Transparent.</h2>
+  <ul>
+    <li>We do not store, track or collect your data.</li>
+    <li>All audits happen directly inside your browser.</li>
+  </ul>
+
+  <h2>Open Source</h2>
+  <p>SEO Auditor is fully open-source. Anyone can review, audit, and contribute to the project.</p>
+  <p><a href="https://github.com/plainsignal/seo-auditor" target="_blank">View the source code on GitHub</a></p>
+
+  <div class="cta">
+    <a href="#" target="_blank">Install from Chrome Web Store</a>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 prevue.me — SEO Auditor is 100% Client-side SEO Audit Tool as Chrome Extension.
+  <div class="footer-links">
+    <a href="https://prevue.me/chrome-extensions/seo-auditor/privacy.html" target="_blank">Privacy Policy</a>
+  </div>
+</footer>
+
+</body>
+</html>
