@@ -473,6 +473,7 @@ function renderTools() {
   let html = `<div class="card"><ul>`;
   html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank">PageSpeed Insights</a></li>`;
   html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank">Rich Results Test</a></li>`;
+  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank">Schema.org Validator</a></li>`;
   html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank">Open Graph Preview</li>`;
   html += `</ul></div>`;
   document.getElementById('tools').innerHTML = html;
