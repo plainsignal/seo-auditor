@@ -295,7 +295,7 @@ function renderOverview(data) {
     link: "https://www.w3.org/International/articles/definitions-characters/#charset"
   });
 
-  html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Hreflang missing: no language/region targeting for international SEO."), "hreflang", "hreflang", "", {
+  html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "", {
     description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
     link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
   });
