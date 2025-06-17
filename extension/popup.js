@@ -182,6 +182,7 @@ function icon(name) {
     canonical: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M10 13l2 2 4-4"/><path d="M4 6h16"/></svg>`,
     robots: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="7" y="10" width="10" height="10"/><path d="M12 4v6"/><path d="M8 4h8"/></svg>`,
     language: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 20v-8M12 4h0M4 12h16"/></svg>`,
+    hreflang: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 20v-8M12 4h0M4 12h16"/></svg>`,
     words: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>`,
     headings: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6v12M20 6v12M4 12h16"/></svg>`,
     images: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l6-6 4 4 8-8"/></svg>`,
@@ -295,7 +296,7 @@ function renderOverview(data) {
     link: "https://www.w3.org/International/articles/definitions-characters/#charset"
   });
 
-  html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "", {
+  html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "hreflang", {
     description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
     link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
   });
@@ -351,13 +352,13 @@ function renderMeta(meta) {
 
   // Hreflang details
   if (Object.keys(meta.og).length === 0) {
-    html += renderBlock("Hreflang", meta.hreflang, "hreflang", "hreflang", "", {
+    html += renderBlock("Hreflang", meta.hreflang, "hreflang", "hreflang", "hreflang", {
       description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
       link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
     });
   } else {
     html += `<div class="section-block">
-    <div class="section-title-left">${icon("words")} Hreflang
+    <div class="section-title-left">${icon("hreflang")} Hreflang
       <a href="https://developers.google.com/search/docs/specialty/international/localized-versions" target="_blank" class="help-icon" title="The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.">
         <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
