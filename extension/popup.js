@@ -107,13 +107,13 @@ function evaluateSuggestions(data) {
   audit.title = titleLen === 0 ?
     { ok: false, reason: "Title missing" } :
     (titleLen < 50 ? { ok: false, reason: "Title too short (50-70 chars ideal)" } :
-    (titleLen > 70 ? { ok: false, reason: "Title too long (50-70 chars ideal)" } : { ok: true }));
+      (titleLen > 70 ? { ok: false, reason: "Title too long (50-70 chars ideal)" } : { ok: true }));
 
   const descLen = (data.meta.description || "").length;
   audit.description = descLen === 0 ?
     { ok: false, reason: "Meta description missing" } :
     (descLen < 120 ? { ok: false, reason: "Description too short (120-160 chars ideal)" } :
-    (descLen > 160 ? { ok: false, reason: "Description too long (120-160 chars ideal)" } : { ok: true }));
+      (descLen > 160 ? { ok: false, reason: "Description too long (120-160 chars ideal)" } : { ok: true }));
 
   const canonicalURL = data.meta.canonical;
   audit.canonical = !canonicalURL ?
@@ -133,8 +133,8 @@ function evaluateSuggestions(data) {
   audit.images = (data.content.images.withoutAlt > 0) ?
     { ok: false, reason: `${data.content.images.withoutAlt} images missing alt` } : { ok: true };
   audit.srcset = (data.content.images.withSrcset / data.content.images.total < 0.5)
-  ? { ok: false, reason: "Less than 50% images have srcset for responsive loading" }
-  : { ok: true };
+    ? { ok: false, reason: "Less than 50% images have srcset for responsive loading" }
+    : { ok: true };
 
   const ext = data.content.links.external;
   const total = data.content.links.total;
@@ -202,13 +202,13 @@ function renderBlock(label, value, auditKey, iconKey, hint = "", help = null) {
   const iconSvg = statusIcon(result);
 
   const helpIcon = help
-  ? `<a href="${help.link}" target="_blank" title="${help.description}" class="help-icon">
+    ? `<a href="${help.link}" target="_blank" title="${help.description}" class="help-icon">
        <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
          <circle cx="12" cy="12" r="10"/>
          <path d="M12 16v-4M12 8h.01"/>
        </svg>
      </a>`
-  : "";
+    : "";
 
   return `
     <div class="section-block">
@@ -472,9 +472,10 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap) {
 function renderTools() {
   const encodedUrl = encodeURIComponent(currentUrl);
   let html = `<div class="card"><ul>`;
+  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate html schema">W3.org Validator</a></li>`;
+  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Validate structured snippets for Google">Rich Results Test</a></li>`;
+  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured snippets">Schema.org Validator</a></li>`;
   html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank">PageSpeed Insights</a></li>`;
-  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank">Rich Results Test</a></li>`;
-  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank">Schema.org Validator</a></li>`;
   html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank">Open Graph Preview</li>`;
   html += `</ul></div>`;
   document.getElementById('tools').innerHTML = html;
@@ -508,7 +509,7 @@ function renderHeadings(data) {
 
   let html = `<div class="card">`;
   html += `<div class="subtabs">`;
-  ['H1','H2','H3','H4','H5','H6'].forEach(h => {
+  ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].forEach(h => {
     html += `<div class="subtab" data-head="${h}">${h} (${headings[h]})</div>`;
   });
   html += `</div><div id="headings-detail"></div></div>`;

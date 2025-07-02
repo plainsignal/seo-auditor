@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SEO Auditor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "SEO Auditor is a SEO analyzer & checker app. Audits title, meta tags, accessibility, robots.txt, sitemap inclusion & indexability.",
   "permissions": [
     "scripting",

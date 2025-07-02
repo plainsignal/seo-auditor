@@ -24,7 +24,6 @@ SEO Auditor is a powerful Chrome Extension that performs instant, full on-page S
 ## 📦 Repository Structure
 
 ```
-├── chrome-extensions # ignore this folder, it hosts the homepage of the extension
 ├── extension
 │ ├── background.js
 │ ├── content.js
@@ -38,7 +37,6 @@ SEO Auditor is a powerful Chrome Extension that performs instant, full on-page S
 ├── LICENSE
 ├── README.md
 ```
-
 
 - All extension source files are stored inside the `/extension` folder.
 - `seo-auditor-extension.zip` is the ready-to-upload package for Chrome Web Store submission.
