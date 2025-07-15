@@ -6,6 +6,8 @@ SEO Auditor is a powerful Chrome Extension that performs instant, full on-page S
 
 ## 🔧 Features
 
+- ✅ llms.txt checker for LLM SEO / LEO / AI SEO Improvements
+- ✅ llms-full.txt checker for LLM SEO / LEO / AI SEO Improvements
 - ✅ Meta tag audits (title, description, canonical, robots, Open Graph, Twitter, JSON-LD, viewport, charset, language, favicon)
 - ✅ Headings structure audit (H1–H6 with hierarchy)
 - ✅ Image audits (alt attributes, srcset, missing tags)
