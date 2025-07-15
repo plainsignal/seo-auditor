@@ -1,6 +1,6 @@
-//------------------------------------//
-// SEO Auditor v1.0 full final complete
-//------------------------------------//
+//--------------------------------------//
+// SEO Auditor v1.0.5 full final complete
+//--------------------------------------//
 
 let currentUrl = "";
 
@@ -24,16 +24,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
   });
 });
 
-// Fetch robots.txt and sitemap.xml after extraction
+// Fetch robots.txt, sitemap.xml, llms.txt, and llms-full.txt after extraction
 function analyzePage(data) {
   const origin = new URL(data.url).origin;
 
   Promise.all([
     fetch(origin + "/robots.txt").then(res => res.ok ? res.text() : "robots.txt not found").catch(() => "robots.txt fetch error"),
-    fetch(origin + "/sitemap.xml").then(res => res.ok ? res.text() : "sitemap.xml not found").catch(() => "sitemap.xml fetch error")
-  ]).then(([robotsTxt, sitemapXml]) => {
+    fetch(origin + "/sitemap.xml").then(res => res.ok ? res.text() : "sitemap.xml not found").catch(() => "sitemap.xml fetch error"),
+    fetch(origin + "/llms.txt").then(res => res.ok ? res.text() : "llms.txt not found").catch(() => "llms.txt fetch error"),
+    fetch(origin + "/llms-full.txt").then(res => res.ok ? res.text() : "llms-full.txt not found").catch(() => "llms-full.txt fetch error")
+  ]).then(([robotsTxt, sitemapXml, llmsTxt, llmsFullTxt]) => {
     data.robotsTxt = robotsTxt;
     data.sitemapXml = sitemapXml;
+    data.llmsTxt = llmsTxt; // Store llms.txt content
+    data.llmsFullTxt = llmsFullTxt; // Store llms-full.txt content
 
     if (sitemapXml && !sitemapXml.startsWith("sitemap.xml not found")) {
       try {
@@ -72,7 +76,7 @@ function tabIcon(name) {
     meta: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 4h16M4 8h16M10 8v12"/></svg>`,
     indexing: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>`,
     tools: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4z"/></svg>`,
-    about: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>`
+    about: `<svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`
   };
   return icons[name] || "";
 }
@@ -124,6 +128,9 @@ function evaluateSuggestions(data) {
   audit.indexable = data.indexable ? { ok: true } : { ok: false, reason: "Page marked as noindex" };
 
   audit.sitemap = (data.sitemapXml && data.sitemapXml !== "sitemap.xml not found") ? { ok: true } : { ok: false, reason: "No sitemap.xml found" };
+  audit.llmsTxt = (data.llmsTxt && data.llmsTxt !== "llms.txt not found") ? { ok: true } : { ok: false, reason: "No llms.txt found" };
+  audit.llmsFullTxt = (data.llmsFullTxt && data.llmsFullTxt !== "llms-full.txt not found") ? { ok: true } : { ok: false, reason: "No llms-full.txt found" };
+
   audit.words = (data.wordCount < 300) ? { ok: false, reason: "Low word count" } : { ok: true };
 
   audit.h1 = data.content.headings.H1 === 0 ?
@@ -187,7 +194,8 @@ function icon(name) {
     headings: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6v12M20 6v12M4 12h16"/></svg>`,
     images: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l6-6 4 4 8-8"/></svg>`,
     links: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M10 14L5 19a3 3 0 0 0 4 4l5-5"/><path d="M14 10l5-5a3 3 0 0 0-4-4l-5 5"/></svg>`,
-    url: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 12h16M12 4v16"/></svg>`
+    url: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 12h16M12 4v16"/></svg>`,
+    llms: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M7 7h.01"></path><path d="M12 7h.01"></path><path d="M17 7h.01"></path><path d="M7 12h.01"></path><path d="M12 12h.01"></path><path d="M17 12h.01"></path><path d="M7 17h.01"></path><path d="M12 17h.01"></path><path d="M17 17h.01"></path></svg>`
   };
   return icons[name] || "";
 }
@@ -203,10 +211,11 @@ function renderBlock(label, value, auditKey, iconKey, hint = "", help = null) {
 
   const helpIcon = help
     ? `<a href="${help.link}" target="_blank" title="${help.description}" class="help-icon">
-       <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-         <circle cx="12" cy="12" r="10"/>
-         <path d="M12 16v-4M12 8h.01"/>
-       </svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
      </a>`
     : "";
 
@@ -260,6 +269,18 @@ function renderOverview(data) {
     description: "Helps search engines discover site URLs and crawl more efficiently.",
     link: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"
   });
+
+  // Add llms.txt and llms-full.txt to overview - FIX: Displaying proper string value
+  html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
+    description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
+    link: "https://llms.txt/" // Placeholder link, replace with actual spec if available
+  });
+
+  html += renderBlock("llms-full.txt", (audit.llmsFullTxt.ok ? "Found" : "Missing"), "llmsFullTxt", "llms", "", {
+    description: "A more comprehensive version of `llms.txt`, providing more detailed instructions or broader scope for LLM interaction with your site. It can include specific paths, content types, or usage policies for AI models.",
+    link: "https://llms.txt/full-spec" // Placeholder link, replace with actual spec if available
+  });
+
 
   html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
     description: "Indicates the primary language of the content, helping search engines serve users in their language.",
@@ -362,7 +383,8 @@ function renderMeta(meta) {
       <a href="https://developers.google.com/search/docs/specialty/international/localized-versions" target="_blank" class="help-icon" title="The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.">
         <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
+          <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
         </svg>
       </a>
     </div>`;
@@ -377,7 +399,8 @@ function renderMeta(meta) {
       <a href="https://ogp.me/" target="_blank" class="help-icon" title="Enables better link previews when pages are shared on social media platforms.">
         <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
+          <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
         </svg>
       </a>
     </div>`;
@@ -406,7 +429,8 @@ function renderMeta(meta) {
       <a href="https://schema.org/docs/gs.html" target="_blank" class="help-icon" title="Allows structured data markup to improve search appearance with rich snippets and special features.">
         <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
+          <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
         </svg>
       </a>
     </div>`;
@@ -438,7 +462,7 @@ function renderMeta(meta) {
 // INDEXING TAB RENDERING
 //------------------------------------//
 
-function renderIndexing(robotsTxt, sitemapXml, inSitemap) {
+function renderIndexing(robotsTxt, sitemapXml, inSitemap, llmsTxt, llmsFullTxt) {
   let html = `<div class="card">`;
 
   html += renderBlock("robots.txt", robotsTxt, "robots", "robots", "", {
@@ -459,6 +483,17 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap) {
   html += renderBlock("Indexability", (audit.indexable.ok ? "Indexable" : "Noindex"), "indexable", "robots", "", {
     description: "Controls whether search engines are allowed to index this page based on robots meta and HTTP headers.",
     link: "https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag"
+  });
+
+  // Add llms.txt and llms-full.txt to indexing tab - FIX: Displaying proper string value and adding help
+  html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
+    description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
+    link: "https://llms.txt/" // Placeholder for the actual spec, if it materializes
+  });
+
+  html += renderBlock("llms-full.txt", (audit.llmsFullTxt.ok ? "Found" : "Missing"), "llmsFullTxt", "llms", "", {
+    description: "A more comprehensive version of `llms.txt`, providing more detailed instructions or broader scope for LLM interaction with your site. It can include specific paths, content types, or usage policies for AI models.",
+    link: "https://llms.txt/full-spec" // Placeholder for a more detailed spec
   });
 
   html += `</div>`;
@@ -500,7 +535,8 @@ function renderAbout() {
 
 function renderHeadings(data) {
   if (!data || !data.content || !data.content.headings) {
-    document.getElementById('headings').innerHTML = `<div class="warn">No headings data available.</div>`;
+    // Ensure the initial warning message also has the correct font size
+    document.getElementById('headings').innerHTML = `<div class="warn" style="font-size: 1rem;">No headings data available.</div>`;
     return;
   }
 
@@ -521,7 +557,10 @@ function renderHeadings(data) {
       tab.classList.add('active');
       const h = tab.dataset.head;
       const list = headingContents[h].map(t => `<li class="list">${t}</li>`).join('');
-      document.getElementById('headings-detail').innerHTML = list ? `<ul>${list}</ul>` : `<div class="warn">No ${h} tags found</div>`;
+
+      // Apply style to the warning message if no tags are found for the category
+      const content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${h} tags found</div>`;
+      document.getElementById('headings-detail').innerHTML = content;
     });
   });
 
@@ -534,7 +573,8 @@ function renderHeadings(data) {
 
 function renderLinks(data) {
   if (!data || !data.content || !data.content.links) {
-    document.getElementById('links').innerHTML = `<div class="warn">No link data available.</div>`;
+    // Ensure the warning message also has the correct font size
+    document.getElementById('links').innerHTML = `<div class="warn" style="font-size: 1rem;">No link data available.</div>`;
     return;
   }
 
@@ -565,10 +605,9 @@ function renderLinks(data) {
     link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#linking"
   });
 
-  html += `</div><div id="links-detail" class="list"></div></div>`;
+  html += `</div><div id="links-detail" class="links-detail-container"></div></div>`;
   document.getElementById('links').innerHTML = html;
 
-  // Subtab click handler remains same
   document.querySelectorAll('.subtab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
@@ -577,20 +616,80 @@ function renderLinks(data) {
       let filtered = [];
 
       if (type === 'total') filtered = fullList;
-      if (type === 'internal') filtered = fullList.filter(l => new URL(l.href).hostname === currentHost);
-      if (type === 'external') filtered = fullList.filter(l => new URL(l.href).hostname !== currentHost);
+      if (type === 'internal') filtered = fullList.filter(l => {
+        try {
+          return new URL(l.href).hostname === currentHost;
+        } catch (e) {
+          return false;
+        }
+      });
+      if (type === 'external') filtered = fullList.filter(l => {
+        try {
+          return new URL(l.href).hostname !== currentHost;
+        } catch (e) {
+          return false;
+        }
+      });
       if (type === 'nofollow') filtered = fullList.filter(l => l.rel.toLowerCase().includes('nofollow'));
       if (type === 'empty') filtered = fullList.filter(l => (l.text || '').trim() === '');
       if (type === 'short') filtered = fullList.filter(l => l.text.length > 0 && l.text.length < 3);
 
-      const list = filtered.map(l => `
-        <li style="margin-bottom:10px;">
-          <div><a href="${l.href}" target="_blank">${l.href}</a></div>
-          <div style="color:#666;">Text: ${l.text || "(no text)"}</div>
-          <div style="color:#aaa;">rel: ${l.rel || "(none)"}, target: ${l.target || "(none)"}</div>
-        </li>`).join('');
+      let linksContentHtml = '';
+      if (filtered.length > 0) {
+        linksContentHtml = `
+          <style>
+            .link-item {
+              border: 1px solid #e5e7eb;
+              padding: 0.75rem;
+              margin-bottom: 0.75rem;
+              border-radius: 0.3rem;
+              background-color: #ffffff;
+              font-size: 1rem; /* Consistent with other text */
+            }
+            .link-item:last-child {
+              margin-bottom: 0;
+            }
+            .link-url {
+              font-weight: 600;
+              color: #2563eb;
+              word-break: break-all;
+            }
+            .link-text {
+              margin-top: 0.25rem;
+              color: #374151;
+              font-size: 1rem; /* Consistent with other text */
+            }
+            .link-meta {
+              font-size: 0.9rem; /* Slightly smaller for meta info */
+              color: #6b7280;
+              margin-top: 0.25rem;
+            }
+            .link-meta span {
+              margin-right: 0.75rem;
+            }
+            .link-warn {
+                color: #f97316;
+                font-size: 1rem; /* Ensure warning text is also 1rem */
+            }
+          </style>
+          <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+        `;
+        linksContentHtml += filtered.map(l => `
+          <div class="link-item">
+            <div class="link-url"><a href="${l.href}" target="_blank">${l.href}</a></div>
+            <div class="link-text">Anchor Text: ${l.text || '<span class="link-warn">(No anchor text)</span>'}</div>
+            <div class="link-meta">
+              <span>Rel: ${l.rel || '(none)'}</span>
+              <span>Target: ${l.target || '(none)'}</span>
+            </div>
+          </div>`).join('');
+        linksContentHtml += `</div>`;
+      } else {
+        // Apply the same styling to the warning message if no links are found
+        linksContentHtml = `<div class="warn" style="font-size: 1rem;">No links found for this category.</div>`;
+      }
 
-      document.getElementById('links-detail').innerHTML = list ? `<ul>${list}</ul>` : `<div class="warn">No links found</div>`;
+      document.getElementById('links-detail').innerHTML = linksContentHtml;
     });
   });
 
@@ -601,9 +700,10 @@ function subtabWithAudit(key, label, auditField = null, help = null) {
   const iconSvg = auditField ? statusIcon(auditField, 14) : "";
   const helpIcon = help
     ? `<a href="${help.link}" target="_blank" class="help-icon" title="${help.description}">
-        <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
         </svg>
       </a>` : "";
 
@@ -616,17 +716,18 @@ function subtabWithAudit(key, label, auditField = null, help = null) {
 
 function renderImages(data) {
   if (!data || !data.content || !data.content.images) {
-    document.getElementById('images').innerHTML = `<div class="warn">No image data available.</div>`;
+    // Ensure the initial warning message also has the correct font size
+    document.getElementById('images').innerHTML = `<div class="warn" style="font-size: 1rem;">No image data available.</div>`;
     return;
   }
 
   const images = data.content.images;
-  const total = images.withAlt + images.withoutAlt;
+  const totalImagesCount = images.total;
 
   let html = `<div class="card">`;
   html += `<div class="subtabs">`;
 
-  html += imageSubtabWithAudit("total", `All (${total})`);
+  html += imageSubtabWithAudit("total", `All (${totalImagesCount})`);
   html += imageSubtabWithAudit("withalt", `With Alt (${images.withAlt})`);
   html += imageSubtabWithAudit("withoutalt", `Without Alt (${images.withoutAlt})`, audit.images, {
     description: "Alt text improves accessibility and allows image indexing by search engines.",
@@ -637,7 +738,7 @@ function renderImages(data) {
     link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset"
   });
 
-  html += `</div><div id="images-detail" class="list"></div></div>`;
+  html += `</div><div id="images-detail" class="images-detail-container"></div></div>`;
   document.getElementById('images').innerHTML = html;
 
   document.querySelectorAll('.subtab').forEach(tab => {
@@ -646,28 +747,91 @@ function renderImages(data) {
       tab.classList.add('active');
 
       const type = tab.dataset.img;
-      let list = '';
+      let displayImages = [];
+
+      const allUnifiedImages = [].concat(
+        images.listWithAlt.map(img => ({
+          src: img.src,
+          alt: img.alt,
+          hasSrcset: !images.listWithoutSrcset.includes(img.src)
+        })),
+        images.listWithoutAlt.map(src => ({
+          src: src,
+          alt: null,
+          hasSrcset: !images.listWithoutSrcset.includes(src)
+        }))
+      );
+
+      const uniqueUnifiedImages = [];
+      const seenSrcs = new Set();
+      allUnifiedImages.forEach(img => {
+        if (!seenSrcs.has(img.src)) {
+          uniqueUnifiedImages.push(img);
+          seenSrcs.add(img.src);
+        }
+      });
+
 
       if (type === 'total') {
-        const totalList = [].concat(
-          images.listWithAlt.map(img => ({ src: img.src, alt: img.alt })),
-          images.listWithoutAlt.map(src => ({ src: src, alt: null }))
-        );
-        list = totalList.map(img => {
-          return `<li>${img.src} — alt: ${img.alt || "<span class='warn'>Missing alt</span>"}</li>`;
-        }).join('');
-      }
-      if (type === 'withalt') {
-        list = images.listWithAlt.map(img => `<li>${img.src} — alt: ${img.alt}</li>`).join('');
-      }
-      if (type === 'withoutalt') {
-        list = images.listWithoutAlt.map(src => `<li>${src} — <span class="warn">Missing alt</span></li>`).join('');
-      }
-      if (type === 'nosrcset') {
-        list = images.listWithoutSrcset.map(src => `<li>${src} — <span class="warn">Missing srcset</span></li>`).join('');
+        displayImages = uniqueUnifiedImages;
+      } else if (type === 'withalt') {
+        displayImages = uniqueUnifiedImages.filter(img => img.alt !== null);
+      } else if (type === 'withoutalt') {
+        displayImages = uniqueUnifiedImages.filter(img => img.alt === null);
+      } else if (type === 'nosrcset') {
+        displayImages = uniqueUnifiedImages.filter(img => !img.hasSrcset);
       }
 
-      document.getElementById('images-detail').innerHTML = list ? `<ul>${list}</ul>` : `<div class="warn">No images found</div>`;
+      let imagesContentHtml = '';
+      if (displayImages.length > 0) {
+        imagesContentHtml = `
+          <style>
+            .image-item {
+              border: 1px solid #e5e7eb;
+              padding: 0.75rem;
+              margin-bottom: 0.75rem;
+              border-radius: 0.3rem;
+              background-color: #ffffff;
+              font-size: 1rem;
+            }
+            .image-item:last-child {
+              margin-bottom: 0;
+            }
+            .image-label {
+              font-weight: 600;
+            }
+            .image-source {
+              color: #2563eb;
+              word-break: break-all;
+            }
+            .image-alt-text, .image-srcset-status {
+              margin-top: 0.25rem;
+              color: #374151;
+              font-size: 1rem;
+            }
+            .image-warn {
+                color: #f97316;
+                font-size: 1rem; /* Ensure warning text within items is 1rem */
+            }
+            .warn { /* Style for the main warning message */
+                font-size: 1rem;
+            }
+          </style>
+          <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+        `;
+        imagesContentHtml += displayImages.map(img => `
+          <div class="image-item">
+            <div class="image-source"><span class="image-label">Source:</span> <a href="${img.src}" target="_blank">${img.src}</a></div>
+            <div class="image-alt-text"><span class="image-label">Alt Text:</span> ${img.alt !== null ? img.alt : '<span class="image-warn">Missing</span>'}</div>
+            <div class="image-srcset-status"><span class="image-label">Srcset:</span> ${img.hasSrcset ? '✔ Present' : '<span class="image-warn">✖ Missing</span>'}</div>
+          </div>`).join('');
+        imagesContentHtml += `</div>`;
+      } else {
+        // Apply inline style to the warning div for immediate effect
+        imagesContentHtml = `<div class="warn" style="font-size: 1rem;">No images found for this category.</div>`;
+      }
+
+      document.getElementById('images-detail').innerHTML = imagesContentHtml;
     });
   });
 
@@ -678,9 +842,10 @@ function imageSubtabWithAudit(key, label, auditField = null, help = null) {
   const iconSvg = auditField ? statusIcon(auditField, 14) : "";
   const helpIcon = help
     ? `<a href="${help.link}" target="_blank" class="help-icon" title="${help.description}">
-        <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.81 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
         </svg>
       </a>` : "";
 
@@ -694,7 +859,7 @@ function imageSubtabWithAudit(key, label, auditField = null, help = null) {
 function renderAll(data) {
   renderOverview(data);
   renderMeta(data.meta);
-  renderIndexing(data.robotsTxt, data.sitemapXml, data.inSitemap);
+  renderIndexing(data.robotsTxt, data.sitemapXml, data.inSitemap, data.llmsTxt, data.llmsFullTxt);
   renderHeadings(data);
   renderLinks(data);
   renderImages(data);
