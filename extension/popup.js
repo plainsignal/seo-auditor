@@ -71,7 +71,7 @@ function tabIcon(name) {
   const icons = {
     overview: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v4h-7zM14 10h7v11h-7zM3 14h7v7H3z"/></svg>`,
     headings: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6v12M20 6v12M4 12h16"/></svg>`,
-    links: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M10 14L5 19a3 3 0 0 0 4 4l5-5"/><path d="M14 10l5-5a3 3 0 0 0-4-4l-5 5"/></svg>`,
+    links: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L9.5 9.5M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L14.5 14.5"/></svg>`,
     images: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l6-6 4 4 8-8"/></svg>`,
     meta: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 4h16M4 8h16M10 8v12"/></svg>`,
     indexing: `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>`,
@@ -193,7 +193,7 @@ function icon(name) {
     words: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>`,
     headings: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 6v12M20 6v12M4 12h16"/></svg>`,
     images: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l6-6 4 4 8-8"/></svg>`,
-    links: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M10 14L5 19a3 3 0 0 0 4 4l5-5"/><path d="M14 10l5-5a3 3 0 0 0-4-4l-5 5"/></svg>`,
+    links: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L9.5 9.5M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L14.5 14.5"/></svg>`,
     url: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M4 12h16M12 4v16"/></svg>`,
     llms: `<svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M7 7h.01"></path><path d="M12 7h.01"></path><path d="M17 7h.01"></path><path d="M7 12h.01"></path><path d="M12 12h.01"></path><path d="M17 12h.01"></path><path d="M7 17h.01"></path><path d="M12 17h.01"></path><path d="M17 17h.01"></path></svg>`
   };
@@ -219,6 +219,13 @@ function renderBlock(label, value, auditKey, iconKey, hint = "", help = null) {
      </a>`
     : "";
 
+  let externalContent = ``
+  if (!result.ok && help?.externalLink && help?.externalLinkTitle) {
+    externalContent = `
+      <div><a href="${help.externalLink}" target="_blank">${help.externalLinkTitle}</a></div>
+    `
+  }
+
   return `
     <div class="section-block">
       <div class="section-title">
@@ -226,7 +233,7 @@ function renderBlock(label, value, auditKey, iconKey, hint = "", help = null) {
         ${iconSvg}
       </div>
       <div class="section-value">${safeValue} ${hint ? `<span style="color:#888;font-size:0.85rem;">(${hint})</span>` : ""}</div>
-      ${result && !result.ok ? `<div class="suggestion">${result.reason}</div>` : ""}
+      ${result && !result.ok ? `<div class="suggestion">${result.reason}${externalContent}</div>` : ""}
     </div>`;
 }
 
@@ -273,12 +280,16 @@ function renderOverview(data) {
   // Add llms.txt and llms-full.txt to overview - FIX: Displaying proper string value
   html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
     description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
-    link: "https://llms.txt/" // Placeholder link, replace with actual spec if available
+    link: "https://llmstxt.org/",
+    externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
+    externalLinkTitle: "Generate with Chrome Extension"
   });
 
   html += renderBlock("llms-full.txt", (audit.llmsFullTxt.ok ? "Found" : "Missing"), "llmsFullTxt", "llms", "", {
     description: "A more comprehensive version of `llms.txt`, providing more detailed instructions or broader scope for LLM interaction with your site. It can include specific paths, content types, or usage policies for AI models.",
-    link: "https://llms.txt/full-spec" // Placeholder link, replace with actual spec if available
+    link: "https://llmstxt.org/",
+    externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
+    externalLinkTitle: "Generate with Chrome Extension"
   });
 
 
@@ -437,9 +448,17 @@ function renderMeta(meta) {
   if (meta.jsonld.length === 0) {
     html += `<div class="warn">No JSON-LD found</div>`;
   } else {
+    const encodedUrl = encodeURIComponent(currentUrl);
     meta.jsonld.forEach(json => {
       html += `<pre style="background:#f1f1f1;padding:0.5rem;border-radius:5px;">${JSON.stringify(json, null, 2)}</pre>`;
     });
+    html += `
+      <div>
+        <ul>
+          <li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank">Validate with Schema.org</a></li>
+          <li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank">Test with Google Rich Results</a></li>
+        </ul>
+      </div>`;
   }
   html += `</div>`;
 
@@ -488,12 +507,16 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap, llmsTxt, llmsFullTxt) 
   // Add llms.txt and llms-full.txt to indexing tab - FIX: Displaying proper string value and adding help
   html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
     description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
-    link: "https://llms.txt/" // Placeholder for the actual spec, if it materializes
+    link: "https://llmstxt.org/",
+    externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
+    externalLinkTitle: "Generate with Chrome Extension"
   });
 
   html += renderBlock("llms-full.txt", (audit.llmsFullTxt.ok ? "Found" : "Missing"), "llmsFullTxt", "llms", "", {
     description: "A more comprehensive version of `llms.txt`, providing more detailed instructions or broader scope for LLM interaction with your site. It can include specific paths, content types, or usage policies for AI models.",
-    link: "https://llms.txt/full-spec" // Placeholder for a more detailed spec
+    link: "https://llmstxt.org",
+    externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
+    externalLinkTitle: "Generate with Chrome Extension"
   });
 
   html += `</div>`;
@@ -506,13 +529,20 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap, llmsTxt, llmsFullTxt) 
 
 function renderTools() {
   const encodedUrl = encodeURIComponent(currentUrl);
-  let html = `<div class="card"><ul>`;
-  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate html schema">W3.org Validator</a></li>`;
-  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Validate structured snippets for Google">Rich Results Test</a></li>`;
-  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured snippets">Schema.org Validator</a></li>`;
-  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank">PageSpeed Insights</a></li>`;
-  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank">Open Graph Preview</li>`;
-  html += `</ul></div>`;
+  let html = `<div class="card">`; // Start card div
+
+  html += `<div class="section-block">`; // Use section-block for consistent styling
+  html += `<p>Utilize these external tools to further analyze the current page's SEO performance and technical aspects.</p>`;
+  html += `<ul>`;
+  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate HTML and CSS syntax according to W3C standards.">W3.org Validator</a></li>`;
+  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Test your page's structured data to see if it's eligible for rich results on Google Search.">Google Rich Results Test</a></li>`;
+  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured data markup (Schema.org) on your page.">Schema.org Validator</a></li>`;
+  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank" title="Get insights into your page's performance and accessibility for both mobile and desktop.">Google PageSpeed Insights</a></li>`;
+  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank" title="Preview how your page will look when shared on social media platforms (Open Graph).">Open Graph Preview</a></li>`;
+  html += `<li><a href="https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie" target="_blank" title="Generate an llms.txt file to control how AI models interact with your site's content.">LLMs.txt Generator Extension</a></li>`;
+  html += `</ul>`;
+  html += `</div>`; // Close section-block
+  html += `</div>`; // Close card div
   document.getElementById('tools').innerHTML = html;
 }
 
@@ -533,18 +563,58 @@ function renderAbout() {
 // HEADINGS TAB Rendering
 //------------------------------------//
 
+// function renderHeadings(data) {
+//   if (!data || !data.content || !data.content.headings) {
+//     // Ensure the initial warning message also has the correct font size
+//     document.getElementById('headings').innerHTML = `<div class="warn" style="font-size: 1rem;">No headings data available.</div>`;
+//     return;
+//   }
+
+//   const headings = data.content.headings;
+//   const headingContents = data.content.headingContents;
+
+//   let html = `<div class="card">`;
+//   html += `<div class="subtabs">`;
+//   ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].forEach(h => {
+//     html += `<div class="subtab" data-head="${h}">${h} (${headings[h]})</div>`;
+//   });
+//   html += `</div><div id="headings-detail"></div></div>`;
+//   document.getElementById('headings').innerHTML = html;
+
+//   document.querySelectorAll('.subtab').forEach(tab => {
+//     tab.addEventListener('click', () => {
+//       document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+//       tab.classList.add('active');
+//       const h = tab.dataset.head;
+//       const list = headingContents[h].map(t => `<li class="list">${t}</li>`).join('');
+
+//       // Apply style to the warning message if no tags are found for the category
+//       const content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${h} tags found</div>`;
+//       document.getElementById('headings-detail').innerHTML = content;
+//     });
+//   });
+
+//   document.querySelector('.subtab[data-head="H1"]').click();
+// }
+
+//------------------------------------//
+// HEADINGS TAB Rendering
+//------------------------------------//
+
 function renderHeadings(data) {
   if (!data || !data.content || !data.content.headings) {
-    // Ensure the initial warning message also has the correct font size
     document.getElementById('headings').innerHTML = `<div class="warn" style="font-size: 1rem;">No headings data available.</div>`;
     return;
   }
 
   const headings = data.content.headings;
   const headingContents = data.content.headingContents;
+  const headingElements = data.content.headingElements;
 
   let html = `<div class="card">`;
   html += `<div class="subtabs">`;
+  // Move Hierarchy subtab to the first position
+  html += `<div class="subtab" data-head="hierarchy">Hierarchy</div>`; //
   ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].forEach(h => {
     html += `<div class="subtab" data-head="${h}">${h} (${headings[h]})</div>`;
   });
@@ -555,16 +625,67 @@ function renderHeadings(data) {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      const h = tab.dataset.head;
-      const list = headingContents[h].map(t => `<li class="list">${t}</li>`).join('');
+      const type = tab.dataset.head;
 
-      // Apply style to the warning message if no tags are found for the category
-      const content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${h} tags found</div>`;
+      let content = '';
+      if (type === 'hierarchy') {
+        content = buildHeadingHierarchy(headingElements);
+        if (!content) {
+          content = `<div class="warn" style="font-size: 1rem;">No hierarchical heading data to display.</div>`;
+        }
+      } else {
+        const list = headingContents[type].map(t => `<li class="list">${t}</li>`).join('');
+        content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${type} tags found</div>`;
+      }
       document.getElementById('headings-detail').innerHTML = content;
     });
   });
 
-  document.querySelector('.subtab[data-head="H1"]').click();
+  // Make Hierarchy the default active tab
+  document.querySelector('.subtab[data-head="hierarchy"]').click(); //
+}
+
+// New function to build the hierarchical display
+function buildHeadingHierarchy(headingElements) {
+  if (!headingElements || headingElements.length === 0) {
+    return null;
+  }
+
+  let html = `<div class="heading-hierarchy-container">`; // Add a container for overall styling
+
+  // This function will recursively build the HTML
+  function renderNestedHeadings(index, currentLevel) {
+    let subHtml = '';
+    while (index < headingElements.length) {
+      const item = headingElements[index];
+      const level = parseInt(item.tag.substring(1));
+
+      if (level === currentLevel) {
+        subHtml += `<div class="section-block heading-item">
+                       <div class="section-title-left"><strong>${item.tag}</strong></div>
+                       <div class="section-value">${item.text}</div>
+                     </div>`;
+        index++;
+      } else if (level > currentLevel) {
+        // Deeper level: start a new nested list
+        subHtml += `<div class="heading-nested-group">`;
+        const [nestedHtml, newIndex] = renderNestedHeadings(index, level);
+        subHtml += nestedHtml;
+        subHtml += `</div>`;
+        index = newIndex;
+      } else {
+        // Higher level: stop recursion for current level
+        break;
+      }
+    }
+    return [subHtml, index];
+  }
+
+  const [hierarchyHtml] = renderNestedHeadings(0, 1); // Start with H1 level (level 1)
+  html += hierarchyHtml;
+  html += `</div>`;
+
+  return html;
 }
 
 //------------------------------------//

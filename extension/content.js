@@ -1,7 +1,3 @@
-//------------------------------------//
-// content.js v8.5 full final
-//------------------------------------//
-
 function scrapePage() {
   const meta = {};
 
@@ -49,7 +45,7 @@ function scrapePage() {
   document.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
     try {
       meta.jsonld.push(JSON.parse(script.innerText));
-    } catch (e) {}
+    } catch (e) { }
   });
 
   // Hreflang
@@ -64,9 +60,15 @@ function scrapePage() {
   // Headings extraction
   const headings = { H1: 0, H2: 0, H3: 0, H4: 0, H5: 0, H6: 0 };
   const headingContents = { H1: [], H2: [], H3: [], H4: [], H5: [], H6: [] };
+  const headingElements = []; // NEW: Store all heading elements in order
   document.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach(h => {
-    headings[h.tagName]++;
-    headingContents[h.tagName].push(h.textContent.trim());
+    const tagName = h.tagName; // e.g., 'H1'
+    headings[tagName]++; //
+    headingContents[tagName].push(h.textContent.trim()); //
+    headingElements.push({ // NEW: Add each heading with its tag and text to the ordered list
+      tag: tagName, //
+      text: h.textContent.trim() //
+    });
   });
 
   // Images extraction (fully compatible)
@@ -141,6 +143,7 @@ function scrapePage() {
     content: {
       headings: headings,
       headingContents: headingContents,
+      headingElements: headingElements, // NEW: Include the ordered list of heading elements
       images: images,
       links: {
         internal: internal,

@@ -188,16 +188,69 @@
       color: white;
     }
 
-    .tools a {
-      display: inline-block;
-      color: #2563eb;
-      text-decoration: none;
-      font-size: 1rem;
-      padding-bottom: 0.1rem;
+    /* Styles for the tools list */
+    .tools ul {
+      list-style: none;
+      /* Remove default bullet points */
+      padding: 0;
+      margin: 0;
     }
 
-    .tools a:hover {
-      text-decoration: underline;
+    .tools li {
+      margin-bottom: 0.75rem;
+      /* Space between list items */
+      font-size: 1rem;
+    }
+
+    .tools li:last-child {
+      margin-bottom: 0;
+      /* No margin after the last item */
+    }
+
+    .tools li a {
+      display: flex;
+      /* Use flexbox for icon and text alignment */
+      align-items: center;
+      gap: 0.5rem;
+      /* Space between icon and text */
+      color: #2563eb;
+      text-decoration: none;
+      padding: 0.5rem;
+      /* Add padding for clickable area */
+      border: 1px solid #e5e7eb;
+      border-radius: 0.3rem;
+      background-color: #fcfcfc;
+      transition: all 0.2s ease;
+    }
+
+    .tools li a:hover {
+      background-color: #eff6ff;
+      /* Light blue background on hover */
+      border-color: #93c5fd;
+      /* Blue border on hover */
+      text-decoration: none;
+      /* Prevent underline on hover if not desired */
+    }
+
+    /* Optional: Add icons for each link type if desired,
+   but for now, we'll rely on the existing styling for links.
+   You would add SVG icons similar to how tabIcon() works.
+   For example, you could add a generic link icon:
+*/
+    .tools li a::before {
+      content: '';
+      /* No content, just for background icon */
+      display: inline-block;
+      width: 18px;
+      /* Size of the icon */
+      height: 18px;
+      /* Generic checkmark/link icon */
+      background-size: contain;
+      background-repeat: no-repeat;
+      flex-shrink: 0;
+      /* Prevent icon from shrinking */
+      color: #6b7280;
+      /* Adjust color as needed */
     }
 
     .help-icon {
@@ -213,6 +266,111 @@
     .text-center {
       text-align: center;
       margin: 1rem 0;
+    }
+
+    /* Add these new styles */
+
+    .heading-hierarchy-container {
+      padding: 0 0.5rem;
+      /* Add some padding inside the card */
+    }
+
+    .heading-item {
+      /* Inherits most styling from .section-block */
+      margin-bottom: 0.5rem;
+      /* Space between individual heading entries */
+      padding: 0.5rem 0;
+      /* Adjust padding for a tighter look within the hierarchy */
+      border-bottom: 1px solid #eee;
+      /* Lighter border for hierarchy items */
+      /* Ensure font sizes are consistent */
+    }
+
+    .heading-item .section-title-left strong {
+      font-size: 1rem;
+      /* Adjust font size for Hx tags */
+      color: #334155;
+    }
+
+    .heading-item .section-value {
+      font-size: 1rem;
+      /* Ensure the text content is 1rem */
+      color: #374151;
+      margin-top: 0.2rem;
+      /* Small margin between Hx and its text */
+    }
+
+    .heading-nested-group {
+      margin-left: 1.5rem;
+      /* Indent for nested headings */
+      border-left: 2px solid #e0e7ff;
+      /* A visual indicator for nesting */
+      padding-left: 0.5rem;
+      /* Space after the border */
+      margin-top: 0.5rem;
+      /* Space before a nested group starts */
+      padding-top: 0.2rem;
+      /* Small internal padding */
+    }
+
+    /* Optional: If .section-block already has a strong bottom border,
+   you might want to make the border lighter for hierarchy items specifically. */
+    .heading-hierarchy-container .section-block:last-child {
+      border-bottom: none;
+      /* Remove border from the very last item in the hierarchy */
+    }
+
+    /* Ensure the `warn` message also has the correct font size, as it's been a recurring theme. */
+    .warn {
+      color: #f97316;
+      font-size: 1rem;
+      /* Ensure warning text is also 1rem */
+    }
+
+    /* Double-check `section-block` padding and font sizes if not already set universally */
+    .section-block {
+      padding: 0.75rem 0rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
+      /* Ensure this is consistent */
+    }
+
+    .section-title-left {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.1rem;
+      /* Ensure this is consistent */
+    }
+
+    .section-value {
+      word-break: break-word;
+      white-space: pre-wrap;
+      color: #334155;
+      font-size: 1rem;
+      /* Ensure this is consistent */
+    }
+
+    .suggestion {
+      margin-top: 0.3rem;
+      font-size: 1rem;
+      /* Ensure this is consistent */
+      color: #eab308;
+    }
+
+    /* Adjustments for the `list` class if used in heading contents for consistency */
+    .list {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
     }
   </style>
 </head>
