@@ -3,7 +3,420 @@
 <head>
   <meta charset="UTF-8">
   <title>SEO Audit Report - SEO Auditor</title>
-  <link rel="stylesheet" href="popup.css">
+  <style>
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0rem;
+  width: 728px;
+  background: #f8fafc;
+}
+
+.footer {
+  font-size: 0.8rem;
+  text-align: right;
+  padding: 0 1rem 0.5rem 0;
+  color: #6b7280;
+}
+
+h1 {
+  font-size: 1.6rem;
+}
+
+p {
+  font-size: 1rem;
+  color: #374151;
+  padding: 0.3rem 0 0.3rem 0;
+}
+
+.header-divider {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  background: #f9fafb;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 1.2rem 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.tab svg {
+  display: block;
+  margin: 0 auto;
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  color: #9ca3af;
+}
+
+.tab.active {
+  color: #111827;
+  font-weight: 600;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid transparent;
+
+}
+
+.tab.active svg {
+  color: #2563eb;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.card {
+  background: #ffffff;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+  color: #334155;
+}
+
+.section-block {
+  padding: 0.75rem 0rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.section-title-left {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.section-title button {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.3rem;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.section-value {
+  word-break: break-word;
+  white-space: pre-wrap;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.section-block li {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+#download-report {
+  margin-right: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.3rem;
+  background: #f8fafc;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.overview-container {
+  padding: 1rem;
+  background: #ffffff;
+}
+
+.suggestion {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  color: #eab308;
+}
+
+pre {
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+  background: #f1f1f1;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.good {
+  color: #16a34a;
+}
+
+.warn {
+  color: #f97316;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.subtabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.subtab {
+  padding: 0.4rem 0.4rem;
+  background: #e5e7eb;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.subtab.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.tool-category h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #334155;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.tools-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.tools-list li {
+  margin-bottom: 0.5rem;
+}
+
+.tools-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.3rem;
+  background-color: #fcfcfc;
+  transition: all 0.2s ease;
+}
+
+.tools-list li a:hover {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.help-icon {
+  margin-left: 4px;
+  color: #94a3b8;
+  cursor: help;
+}
+
+.list {
+  font-size: 1rem;
+}
+
+.text-center {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Add these new styles */
+
+.heading-hierarchy-container {
+  padding: 0.5rem;
+}
+
+.heading-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+}
+
+.heading-tag {
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #3b82f6;
+}
+
+.heading-text {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.links-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.link-item {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+}
+
+.link-item:last-child {
+  margin-bottom: 0;
+}
+
+.link-url {
+  font-weight: 600;
+  color: #2563eb;
+  word-break: break-all;
+}
+
+.link-text {
+  margin-top: 0.25rem;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.link-meta {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.link-meta span {
+  margin-right: 0.75rem;
+}
+
+.link-warn {
+  color: #f97316;
+  font-size: 1rem;
+}
+
+.images-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.image-item {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+}
+
+.image-item:last-child {
+  margin-bottom: 0;
+}
+
+.image-label {
+  font-weight: 600;
+}
+
+.image-source {
+  color: #2563eb;
+  word-break: break-all;
+}
+
+.image-alt-text,
+.image-srcset-status {
+  margin-top: 0.25rem;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.image-warn {
+  color: #f97316;
+  font-size: 1rem;
+}
+
+/* Ensure the `warn` message also has the correct font size, as it's been a recurring theme. */
+.warn {
+  color: #f97316;
+  font-size: 1rem;
+  /* Ensure warning text is also 1rem */
+}
+
+/* Double-check `section-block` padding and font sizes if not already set universally */
+.section-block {
+  padding: 0.75rem 0rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  /* Ensure this is consistent */
+}
+
+.section-title-left {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+  /* Ensure this is consistent */
+}
+
+.section-value {
+  word-break: break-word;
+  white-space: pre-wrap;
+  color: #334155;
+  font-size: 1rem;
+  /* Ensure this is consistent */
+}
+
+.suggestion {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  /* Ensure this is consistent */
+  color: #eab308;
+}
+
+/* Adjustments for the `list` class if used in heading contents for consistency */
+.list {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+</style>
 </head>
 
 <body>
@@ -46,12 +459,10 @@
   </div>
 
   <div class="footer">
-    <button id="download-report">Download Report</button>
     developed by <a
       href="https://plainsignal.com/?utm_source=seo_auditor_chrome_extension&utm_medium=chrome_extension&utm_campaign=tools"
       target="_blank" title="Privacy-focused, simple website analytics">PlainSignal</a></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="popup.js"></script>
 </body>
 
