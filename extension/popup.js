@@ -250,8 +250,6 @@ function renderOverview(data) {
 
   let html = `<div class="overview-container">`;
 
-  // Column 1
-  html += `<div class="overview-column">`;
   html += `<div class="card"><h3>Core Vitals</h3>`;
   html += renderBlock("Title", meta.title, "title", "title", `${meta.title.length} chars`, {
     description: "The title tag defines the clickable headline in search results. It directly influences search ranking and click-through rate (CTR).",
@@ -293,10 +291,7 @@ function renderOverview(data) {
     externalLinkTitle: "Generate with Chrome Extension"
   });
   html += `</div>`;
-  html += `</div>`;
 
-  // Column 2
-  html += `<div class="overview-column">`;
   html += `<div class="card"><h3>Content</h3>`;
   html += `
     <div class="section-block">
@@ -350,7 +345,6 @@ function renderOverview(data) {
     description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
     link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
   });
-  html += `</div>`;
   html += `</div>`;
 
   html += `</div>`;
@@ -532,20 +526,31 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap, llmsTxt, llmsFullTxt) 
 
 function renderTools() {
   const encodedUrl = encodeURIComponent(currentUrl);
-  let html = `<div class="card">`; // Start card div
+  let html = `<div class="card">`;
 
-  html += `<div class="section-block">`; // Use section-block for consistent styling
-  html += `<p>Utilize these external tools to further analyze the current page's SEO performance and technical aspects.</p>`;
-  html += `<ul>`;
-  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate HTML and CSS syntax according to W3C standards.">W3.org Validator</a></li>`;
-  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Test your page's structured data to see if it's eligible for rich results on Google Search.">Google Rich Results Test</a></li>`;
-  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured data markup (Schema.org) on your page.">Schema.org Validator</a></li>`;
-  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank" title="Get insights into your page's performance and accessibility for both mobile and desktop.">Google PageSpeed Insights</a></li>`;
-  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank" title="Preview how your page will look when shared on social media platforms (Open Graph).">Open Graph Preview</a></li>`;
-  html += `<li><a href="https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie" target="_blank" title="Generate an llms.txt file to control how AI models interact with your site's content.">LLMs.txt Generator Extension</a></li>`;
+  html += `<div class="tool-category"><h3>Validation</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate HTML and CSS syntax according to W3C standards.">${icon("tools")} W3.org Validator</a></li>`;
+  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Test your page's structured data to see if it's eligible for rich results on Google Search.">${icon("tools")} Google Rich Results Test</a></li>`;
+  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured data markup (Schema.org) on your page.">${icon("tools")} Schema.org Validator</a></li>`;
   html += `</ul>`;
-  html += `</div>`; // Close section-block
-  html += `</div>`; // Close card div
+
+  html += `<div class="tool-category"><h3>Performance</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank" title="Get insights into your page's performance and accessibility for both mobile and desktop.">${icon("tools")} Google PageSpeed Insights</a></li>`;
+  html += `</ul>`;
+
+  html += `<div class="tool-category"><h3>Social</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank" title="Preview how your page will look when shared on social media platforms (Open Graph).">${icon("tools")} Open Graph Preview</a></li>`;
+  html += `</ul>`;
+
+  html += `<div class="tool-category"><h3>LLM</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie" target="_blank" title="Generate an llms.txt file to control how AI models interact with your site's content.">${icon("tools")} LLMs.txt Generator Extension</a></li>`;
+  html += `</ul>`;
+
+  html += `</div>`;
   document.getElementById('tools').innerHTML = html;
 }
 
