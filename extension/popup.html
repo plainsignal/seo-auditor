@@ -4,375 +4,433 @@
   <meta charset="UTF-8">
   <title>SEO Audit Report - SEO Auditor</title>
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 0;
-      padding: 0rem;
-      width: 728px;
-      background: #f8fafc;
-    }
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0rem;
+  width: 728px;
+  background: #f8fafc;
+}
 
-    .footer {
-      font-size: 0.8rem;
-      text-align: right;
-      padding: 0 1rem 0.5rem 0;
-      color: #6b7280;
-    }
+.footer {
+  font-size: 0.8rem;
+  text-align: right;
+  padding: 0 1rem 0.5rem 0;
+  color: #6b7280;
+}
 
-    h1 {
-      font-size: 1.6rem;
-    }
+h1 {
+  font-size: 1.6rem;
+}
 
-    p {
-      font-size: 1rem;
-      color: #374151;
-      padding: 0.3rem 0 0.3rem 0;
-    }
+p {
+  font-size: 1rem;
+  color: #374151;
+  padding: 0.3rem 0 0.3rem 0;
+}
 
-    .header-divider {
-      border-bottom: 1px solid #e5e7eb;
-    }
+.header-divider {
+  border-bottom: 1px solid #e5e7eb;
+}
 
-    .tabs {
-      display: flex;
-      flex-wrap: nowrap;
-      background: #f9fafb;
-    }
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  background: #f9fafb;
+}
 
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 1.2rem 0;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: #6b7280;
-      border-bottom: 1px solid #e5e7eb;
-      transition: all 0.2s ease;
-    }
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 1.2rem 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
 
-    .tab svg {
-      display: block;
-      margin: 0 auto;
-      width: 20px;
-      height: 20px;
-      stroke-width: 2;
-      color: #9ca3af;
-    }
+.tab svg {
+  display: block;
+  margin: 0 auto;
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  color: #9ca3af;
+}
 
-    .tab.active {
-      color: #111827;
-      font-weight: 600;
-      background-color: #FFFFFF;
-      border-bottom: 1px solid transparent;
+.tab.active {
+  color: #111827;
+  font-weight: 600;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid transparent;
 
-    }
+}
 
-    .tab.active svg {
-      color: #2563eb;
-    }
+.tab.active svg {
+  color: #2563eb;
+}
 
-    .tab-content {
-      display: none;
-    }
+.tab-content {
+  display: none;
+}
 
-    .tab-content.active {
-      display: block;
-    }
+.tab-content.active {
+  display: block;
+}
 
-    .card {
-      background: #ffffff;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
+.card {
+  background: #ffffff;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
 
-    .card h3 {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 0.75rem;
-      color: #334155;
-    }
+.card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+  color: #334155;
+}
 
-    .section-block {
-      padding: 0.75rem 0rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
+.section-block {
+  padding: 0.75rem 0rem;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-    .section-title {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.1rem;
-    }
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+}
 
-    .section-title-left {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 1.1rem;
-    }
+.section-title-left {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+}
 
-    .section-title button {
-      font-size: 0.8rem;
-      padding: 0.2rem 0.5rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 0.3rem;
-      background: #f8fafc;
-      cursor: pointer;
-    }
+.section-title button {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.3rem;
+  background: #f8fafc;
+  cursor: pointer;
+}
 
-    .section-value {
-      word-break: break-word;
-      white-space: pre-wrap;
-      color: #334155;
-      font-size: 1rem;
-    }
+.section-value {
+  word-break: break-word;
+  white-space: pre-wrap;
+  color: #334155;
+  font-size: 1rem;
+}
 
-    .section-block li {
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-    }
+.section-block li {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
 
-    .suggestion {
-      margin-top: 0.3rem;
-      font-size: 1rem;
-      color: #eab308;
-    }
+#download-report {
+  margin-right: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.3rem;
+  background: #f8fafc;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
 
-    pre {
-      font-size: 0.9rem;
-      line-height: 1.4rem;
-      background: #f1f1f1;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      overflow-x: auto;
-      white-space: pre;
-    }
+.overview-container {
+  padding: 1.25rem;
+  background: #ffffff;
+}
 
-    .good {
-      color: #16a34a;
-    }
+.suggestion {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  color: #eab308;
+}
 
-    .warn {
-      color: #f97316;
-    }
+pre {
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+  background: #f1f1f1;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  white-space: pre;
+}
 
-    .error {
-      color: #dc2626;
-    }
+.good {
+  color: #16a34a;
+}
 
-    .subtabs {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin: 0.5rem 0 1rem 0;
-    }
+.warn {
+  color: #f97316;
+}
 
-    .subtab {
-      padding: 0.4rem 0.4rem;
-      background: #e5e7eb;
-      border-radius: 0.3rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-    }
+.error {
+  color: #dc2626;
+}
 
-    .subtab.active {
-      background: #3b82f6;
-      color: white;
-    }
+.subtabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 1rem 0;
+}
 
-    /* Styles for the tools list */
-    .tools ul {
-      list-style: none;
-      /* Remove default bullet points */
-      padding: 0;
-      margin: 0;
-    }
+.subtab {
+  padding: 0.4rem 0.4rem;
+  background: #e5e7eb;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
 
-    .tools li {
-      margin-bottom: 0.75rem;
-      /* Space between list items */
-      font-size: 1rem;
-    }
+.subtab.active {
+  background: #3b82f6;
+  color: white;
+}
 
-    .tools li:last-child {
-      margin-bottom: 0;
-      /* No margin after the last item */
-    }
+.tool-category h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #334155;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
 
-    .tools li a {
-      display: flex;
-      /* Use flexbox for icon and text alignment */
-      align-items: center;
-      gap: 0.5rem;
-      /* Space between icon and text */
-      color: #2563eb;
-      text-decoration: none;
-      padding: 0.5rem;
-      /* Add padding for clickable area */
-      border: 1px solid #e5e7eb;
-      border-radius: 0.3rem;
-      background-color: #fcfcfc;
-      transition: all 0.2s ease;
-    }
+.tools-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
 
-    .tools li a:hover {
-      background-color: #eff6ff;
-      /* Light blue background on hover */
-      border-color: #93c5fd;
-      /* Blue border on hover */
-      text-decoration: none;
-      /* Prevent underline on hover if not desired */
-    }
+.tools-list li {
+  margin-bottom: 0.5rem;
+}
 
-    /* Optional: Add icons for each link type if desired,
-   but for now, we'll rely on the existing styling for links.
-   You would add SVG icons similar to how tabIcon() works.
-   For example, you could add a generic link icon:
-*/
-    .tools li a::before {
-      content: '';
-      /* No content, just for background icon */
-      display: inline-block;
-      width: 18px;
-      /* Size of the icon */
-      height: 18px;
-      /* Generic checkmark/link icon */
-      background-size: contain;
-      background-repeat: no-repeat;
-      flex-shrink: 0;
-      /* Prevent icon from shrinking */
-      color: #6b7280;
-      /* Adjust color as needed */
-    }
+.tools-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.3rem;
+  background-color: #fcfcfc;
+  transition: all 0.2s ease;
+}
 
-    .help-icon {
-      margin-left: 4px;
-      color: #94a3b8;
-      cursor: help;
-    }
+.tools-list li a:hover {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+}
 
-    .list {
-      font-size: 1rem;
-    }
+.help-icon {
+  margin-left: 4px;
+  color: #94a3b8;
+  cursor: help;
+}
 
-    .text-center {
-      text-align: center;
-      margin: 1rem 0;
-    }
+.list {
+  font-size: 1rem;
+}
 
-    /* Add these new styles */
+.text-center {
+  text-align: center;
+  margin: 1rem 0;
+}
 
-    .heading-hierarchy-container {
-      padding: 0 0.5rem;
-      /* Add some padding inside the card */
-    }
+/* Add these new styles */
 
-    .heading-item {
-      /* Inherits most styling from .section-block */
-      margin-bottom: 0.5rem;
-      /* Space between individual heading entries */
-      padding: 0.5rem 0;
-      /* Adjust padding for a tighter look within the hierarchy */
-      border-bottom: 1px solid #eee;
-      /* Lighter border for hierarchy items */
-      /* Ensure font sizes are consistent */
-    }
+.heading-hierarchy-container {
+  padding: 0.5rem;
+}
 
-    .heading-item .section-title-left strong {
-      font-size: 1rem;
-      /* Adjust font size for Hx tags */
-      color: #334155;
-    }
+.heading-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+}
 
-    .heading-item .section-value {
-      font-size: 1rem;
-      /* Ensure the text content is 1rem */
-      color: #374151;
-      margin-top: 0.2rem;
-      /* Small margin between Hx and its text */
-    }
+.heading-tag {
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #3b82f6;
+}
 
-    .heading-nested-group {
-      margin-left: 1.5rem;
-      /* Indent for nested headings */
-      border-left: 2px solid #e0e7ff;
-      /* A visual indicator for nesting */
-      padding-left: 0.5rem;
-      /* Space after the border */
-      margin-top: 0.5rem;
-      /* Space before a nested group starts */
-      padding-top: 0.2rem;
-      /* Small internal padding */
-    }
+.heading-text {
+  font-size: 1rem;
+  color: #374151;
+}
 
-    /* Optional: If .section-block already has a strong bottom border,
-   you might want to make the border lighter for hierarchy items specifically. */
-    .heading-hierarchy-container .section-block:last-child {
-      border-bottom: none;
-      /* Remove border from the very last item in the hierarchy */
-    }
+.links-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
 
-    /* Ensure the `warn` message also has the correct font size, as it's been a recurring theme. */
-    .warn {
-      color: #f97316;
-      font-size: 1rem;
-      /* Ensure warning text is also 1rem */
-    }
+.link-item {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+}
 
-    /* Double-check `section-block` padding and font sizes if not already set universally */
-    .section-block {
-      padding: 0.75rem 0rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
+.link-item:last-child {
+  margin-bottom: 0;
+}
 
-    .section-title {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.1rem;
-      /* Ensure this is consistent */
-    }
+.link-url {
+  font-weight: 600;
+  color: #2563eb;
+  word-break: break-all;
+}
 
-    .section-title-left {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 1.1rem;
-      /* Ensure this is consistent */
-    }
+.link-text {
+  margin-top: 0.25rem;
+  color: #374151;
+  font-size: 1rem;
+}
 
-    .section-value {
-      word-break: break-word;
-      white-space: pre-wrap;
-      color: #334155;
-      font-size: 1rem;
-      /* Ensure this is consistent */
-    }
+.link-meta {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
 
-    .suggestion {
-      margin-top: 0.3rem;
-      font-size: 1rem;
-      /* Ensure this is consistent */
-      color: #eab308;
-    }
+.link-meta span {
+  margin-right: 0.75rem;
+}
 
-    /* Adjustments for the `list` class if used in heading contents for consistency */
-    .list {
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-    }
-  </style>
+.link-warn {
+  color: #f97316;
+  font-size: 1rem;
+}
+
+.images-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.image-item {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+}
+
+.image-item:last-child {
+  margin-bottom: 0;
+}
+
+.image-label {
+  font-weight: 600;
+}
+
+.image-source {
+  color: #2563eb;
+  word-break: break-all;
+}
+
+.image-alt-text,
+.image-srcset-status {
+  margin-top: 0.25rem;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.image-warn {
+  color: #f97316;
+  font-size: 1rem;
+}
+
+/* Ensure the `warn` message also has the correct font size, as it's been a recurring theme. */
+.warn {
+  color: #f97316;
+  font-size: 1rem;
+  /* Ensure warning text is also 1rem */
+}
+
+/* Double-check `section-block` padding and font sizes if not already set universally */
+.section-block {
+  padding: 0.75rem 0rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  /* Ensure this is consistent */
+}
+
+.section-title-left {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+  /* Ensure this is consistent */
+}
+
+.section-value {
+  word-break: break-word;
+  white-space: pre-wrap;
+  color: #334155;
+  font-size: 1rem;
+  /* Ensure this is consistent */
+}
+
+.suggestion {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  /* Ensure this is consistent */
+  color: #eab308;
+}
+
+/* Adjustments for the `list` class if used in heading contents for consistency */
+.list {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.heading-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.heading-list-item {
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  color: #374151;
+}
+</style>
 </head>
 
 <body>
@@ -414,7 +472,8 @@
     <p class="text-center">Rendering in progress...</p>
   </div>
 
-  <div class="footer">developed by <a
+  <div class="footer">
+    developed by <a
       href="https://plainsignal.com/?utm_source=seo_auditor_chrome_extension&utm_medium=chrome_extension&utm_campaign=tools"
       target="_blank" title="Privacy-focused, simple website analytics">PlainSignal</a></div>
 

@@ -248,7 +248,7 @@ function renderOverview(data) {
   const content = data.content;
   const accessibility = data.accessibility;
 
-  let html = `<div class="card">`;
+  let html = `<div class="overview-container card">`;
 
   html += renderBlock("Title", meta.title, "title", "title", `${meta.title.length} chars`, {
     description: "The title tag defines the clickable headline in search results. It directly influences search ranking and click-through rate (CTR).",
@@ -277,7 +277,6 @@ function renderOverview(data) {
     link: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"
   });
 
-  // Add llms.txt and llms-full.txt to overview - FIX: Displaying proper string value
   html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
     description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
     link: "https://llmstxt.org/",
@@ -292,15 +291,26 @@ function renderOverview(data) {
     externalLinkTitle: "Generate with Chrome Extension"
   });
 
+  html += `
+    <div class="section-block">
+      <div class="section-title-left">${icon("headings")} Headings</div>
+      <div class="section-value"><strong>H1:</strong> ${content.headings.H1}, <strong>H2:</strong> ${content.headings.H2}, <strong>H3:</strong> ${content.headings.H3}, <strong>H4:</strong> ${content.headings.H4}, <strong>H5:</strong> ${content.headings.H5}, <strong>H6:</strong> ${content.headings.H6}</div>
+      ${audit.h1 && !audit.h1.ok ? `<div class="suggestion">${audit.h1.reason}</div>` : ""}
+    </div>`;
 
-  html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
-    description: "Indicates the primary language of the content, helping search engines serve users in their language.",
-    link: "https://www.w3.org/International/questions/qa-html-language-declarations"
+  html += renderBlock("Words", `<strong>Words:</strong> ${data.wordCount}, <strong>Characters:</strong> ${data.charCount}`, "words", "words", "", {
+    description: "Sufficient content length helps cover topics thoroughly; very thin pages may be seen as low-quality.",
+    link: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
   });
 
-  html += renderBlock("Favicon", meta.favicon || "Missing", "favicon", "canonical", "", {
-    description: "Improves brand recognition and user experience in browser tabs, search results, and mobile devices.",
-    link: "https://developers.google.com/search/docs/appearance/favicon-in-search"
+  html += renderBlock("Images", `<strong>Total:</strong> ${content.images.withAlt + content.images.withoutAlt}, <strong>Missing alt:</strong> ${content.images.withoutAlt}, <strong>Missing srcset:</strong> ${content.images.listWithoutSrcset.length}`, "images", "images", "", {
+    description: "Alt text improves accessibility and allows image indexing; srcset enables responsive images.",
+    link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset"
+  });
+
+  html += renderBlock("Links", `<strong>Total:</strong> ${content.links.total}, <strong>Internal:</strong> ${content.links.internal}, <strong>External:</strong> ${content.links.external}, <strong>Unique:</strong> ${content.links.uniq}, <strong>Empty text:</strong> ${content.links.emptyText}, <strong>Short text:</strong> ${content.links.shortText}`, "links", "links", "", {
+    description: "Balanced internal and external linking improves crawlability, authority flow, and navigation.",
+    link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#linking"
   });
 
   html += renderBlock("Open Graph", (Object.keys(meta.og).length > 0 ? "Present" : "Missing"), "opengraph", "words", "", {
@@ -313,14 +323,14 @@ function renderOverview(data) {
     link: "https://schema.org/docs/gs.html"
   });
 
-  html += renderBlock("Words", `<strong>Words:</strong> ${data.wordCount}, <strong>Characters:</strong> ${data.charCount}`, "words", "words", "", {
-    description: "Sufficient content length helps cover topics thoroughly; very thin pages may be seen as low-quality.",
-    link: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
-  });
-
   html += renderBlock("Viewport", meta.viewport || "Missing", "viewport", "words", "", {
     description: "Enables responsive design by controlling how a page scales on mobile devices.",
     link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag"
+  });
+
+  html += renderBlock("Favicon", meta.favicon || "Missing", "favicon", "canonical", "", {
+    description: "Improves brand recognition and user experience in browser tabs, search results, and mobile devices.",
+    link: "https://developers.google.com/search/docs/appearance/favicon-in-search"
   });
 
   html += renderBlock("Charset", meta.charset || "Missing", "charset", "words", "", {
@@ -328,26 +338,14 @@ function renderOverview(data) {
     link: "https://www.w3.org/International/articles/definitions-characters/#charset"
   });
 
+  html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
+    description: "Indicates the primary language of the content, helping search engines serve users in their language.",
+    link: "https://www.w3.org/International/questions/qa-html-language-declarations"
+  });
+
   html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "hreflang", {
     description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
     link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
-  });
-
-  html += `
-    <div class="section-block">
-      <div class="section-title-left">${icon("headings")} Headings</div>
-      <div class="section-value"><strong>H1:</strong> ${content.headings.H1}, <strong>H2:</strong> ${content.headings.H2}, <strong>H3:</strong> ${content.headings.H3}, <strong>H4:</strong> ${content.headings.H4}, <strong>H5:</strong> ${content.headings.H5}, <strong>H6:</strong> ${content.headings.H6}</div>
-      ${audit.h1 && !audit.h1.ok ? `<div class="suggestion">${audit.h1.reason}</div>` : ""}
-    </div>`;
-
-  html += renderBlock("Images", `<strong>Total:</strong> ${content.images.withAlt + content.images.withoutAlt}, <strong>Missing alt:</strong> ${content.images.withoutAlt}, <strong>Missing srcset:</strong> ${content.images.listWithoutSrcset.length}`, "images", "images", "", {
-    description: "Alt text improves accessibility and allows image indexing; srcset enables responsive images.",
-    link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset"
-  });
-
-  html += renderBlock("Links", `<strong>Total:</strong> ${content.links.total}, <strong>Internal:</strong> ${content.links.internal}, <strong>External:</strong> ${content.links.external}, <strong>Unique:</strong> ${content.links.uniq}, <strong>Empty text:</strong> ${content.links.emptyText}, <strong>Short text:</strong> ${content.links.shortText}`, "links", "links", "", {
-    description: "Balanced internal and external linking improves crawlability, authority flow, and navigation.",
-    link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#linking"
   });
 
   html += `</div>`;
@@ -529,20 +527,31 @@ function renderIndexing(robotsTxt, sitemapXml, inSitemap, llmsTxt, llmsFullTxt) 
 
 function renderTools() {
   const encodedUrl = encodeURIComponent(currentUrl);
-  let html = `<div class="card">`; // Start card div
+  let html = `<div class="card">`;
 
-  html += `<div class="section-block">`; // Use section-block for consistent styling
-  html += `<p>Utilize these external tools to further analyze the current page's SEO performance and technical aspects.</p>`;
-  html += `<ul>`;
-  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate HTML and CSS syntax according to W3C standards.">W3.org Validator</a></li>`;
-  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Test your page's structured data to see if it's eligible for rich results on Google Search.">Google Rich Results Test</a></li>`;
-  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured data markup (Schema.org) on your page.">Schema.org Validator</a></li>`;
-  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank" title="Get insights into your page's performance and accessibility for both mobile and desktop.">Google PageSpeed Insights</a></li>`;
-  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank" title="Preview how your page will look when shared on social media platforms (Open Graph).">Open Graph Preview</a></li>`;
-  html += `<li><a href="https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie" target="_blank" title="Generate an llms.txt file to control how AI models interact with your site's content.">LLMs.txt Generator Extension</a></li>`;
+  html += `<div class="tool-category"><h3>Validation</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://validator.w3.org/nu/?doc=${encodedUrl}" target="_blank" title="Validate HTML and CSS syntax according to W3C standards.">${icon("tools")} W3.org Validator</a></li>`;
+  html += `<li><a href="https://search.google.com/test/rich-results?url=${encodedUrl}" target="_blank" title="Test your page's structured data to see if it's eligible for rich results on Google Search.">${icon("tools")} Google Rich Results Test</a></li>`;
+  html += `<li><a href="https://validator.schema.org/#url=${encodedUrl}" target="_blank" title="Validate structured data markup (Schema.org) on your page.">${icon("tools")} Schema.org Validator</a></li>`;
   html += `</ul>`;
-  html += `</div>`; // Close section-block
-  html += `</div>`; // Close card div
+
+  html += `<div class="tool-category"><h3>Performance</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://pagespeed.web.dev/report?url=${encodedUrl}" target="_blank" title="Get insights into your page's performance and accessibility for both mobile and desktop.">${icon("tools")} Google PageSpeed Insights</a></li>`;
+  html += `</ul>`;
+
+  html += `<div class="tool-category"><h3>Social</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://og.prevue.me/?urlInput=${encodedUrl}" target="_blank" title="Preview how your page will look when shared on social media platforms (Open Graph).">${icon("tools")} Open Graph Preview</a></li>`;
+  html += `</ul>`;
+
+  html += `<div class="tool-category"><h3>LLM</h3></div>`;
+  html += `<ul class="tools-list">`;
+  html += `<li><a href="https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie" target="_blank" title="Generate an llms.txt file to control how AI models interact with your site's content.">${icon("tools")} LLMs.txt Generator Extension</a></li>`;
+  html += `</ul>`;
+
+  html += `</div>`;
   document.getElementById('tools').innerHTML = html;
 }
 
@@ -553,7 +562,18 @@ function renderTools() {
 function renderAbout() {
   let html = `<div class="card about">
     <h1>SEO Auditor</h1>
-    <p>SEO Auditor is a Chrome Extension that runs technical SEO audit on the currently open webpage in the active tab of the browser when it is clicked on the extension icon. It analyzes the document and generates technical SEO report in seconds. Provides actionable feedback with references to enhance visibility on search engines and LLMs.</p>
+    <p>SEO Auditor is a Chrome Extension that runs a technical SEO audit on the currently open webpage in the active tab of the browser when you click the extension icon. It analyzes the document and generates a technical SEO report in seconds. It provides actionable feedback with references to enhance visibility on search engines and LLMs.</p>
+    <h2>Features</h2>
+    <ul>
+      <li><strong>Overview:</strong> A dashboard view of the most critical SEO factors.</li>
+      <li><strong>Headings:</strong> A hierarchical view of the page's headings.</li>
+      <li><strong>Links:</strong> A detailed analysis of internal, external, and nofollow links.</li>
+      <li><strong>Images:</strong> An analysis of images, including alt text and srcset usage.</li>
+      <li><strong>Meta:</strong> A detailed view of meta tags, including Open Graph and Twitter Cards.</li>
+      <li><strong>Indexing:</strong> An analysis of indexability, including robots.txt and sitemap.xml.</li>
+      <li><strong>Tools:</strong> A list of external tools for further analysis.</li>
+      <li><strong>Copy to Clipboard:</strong> Easily copy the audit results for any tab.</li>
+    </ul>
     <p>Developed by <a href="https://plainsignal.com" target="_blank" title="Privacy-focused, simple website analytics">PlainSignal</a></p>
   </div>`;
   document.getElementById('about').innerHTML = html;
@@ -613,8 +633,7 @@ function renderHeadings(data) {
 
   let html = `<div class="card">`;
   html += `<div class="subtabs">`;
-  // Move Hierarchy subtab to the first position
-  html += `<div class="subtab" data-head="hierarchy">Hierarchy</div>`; //
+  html += `<div class="subtab" data-head="hierarchy">Hierarchy</div>`;
   ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].forEach(h => {
     html += `<div class="subtab" data-head="${h}">${h} (${headings[h]})</div>`;
   });
@@ -634,26 +653,23 @@ function renderHeadings(data) {
           content = `<div class="warn" style="font-size: 1rem;">No hierarchical heading data to display.</div>`;
         }
       } else {
-        const list = headingContents[type].map(t => `<li class="list">${t}</li>`).join('');
-        content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${type} tags found</div>`;
+        const list = headingContents[type].map(t => `<div class="heading-list-item">${t}</div>`).join('');
+        content = list ? `<div class="heading-list">${list}</div>` : `<div class="warn" style="font-size: 1rem;">No ${type} tags found</div>`;
       }
       document.getElementById('headings-detail').innerHTML = content;
     });
   });
 
-  // Make Hierarchy the default active tab
-  document.querySelector('.subtab[data-head="hierarchy"]').click(); //
+  document.querySelector('.subtab[data-head="hierarchy"]').click();
 }
 
-// New function to build the hierarchical display
 function buildHeadingHierarchy(headingElements) {
   if (!headingElements || headingElements.length === 0) {
     return null;
   }
 
-  let html = `<div class="heading-hierarchy-container">`; // Add a container for overall styling
+  let html = `<div class="heading-hierarchy-container">`;
 
-  // This function will recursively build the HTML
   function renderNestedHeadings(index, currentLevel) {
     let subHtml = '';
     while (index < headingElements.length) {
@@ -661,27 +677,23 @@ function buildHeadingHierarchy(headingElements) {
       const level = parseInt(item.tag.substring(1));
 
       if (level === currentLevel) {
-        subHtml += `<div class="section-block heading-item">
-                       <div class="section-title-left"><strong>${item.tag}</strong></div>
-                       <div class="section-value">${item.text}</div>
-                     </div>`;
+        subHtml += `<div class="heading-item" style="margin-left: ${(level - 1) * 20}px;">
+                      <span class="heading-tag">${item.tag}</span>
+                      <span class="heading-text">${item.text}</span>
+                    </div>`;
         index++;
       } else if (level > currentLevel) {
-        // Deeper level: start a new nested list
-        subHtml += `<div class="heading-nested-group">`;
         const [nestedHtml, newIndex] = renderNestedHeadings(index, level);
         subHtml += nestedHtml;
-        subHtml += `</div>`;
         index = newIndex;
       } else {
-        // Higher level: stop recursion for current level
         break;
       }
     }
     return [subHtml, index];
   }
 
-  const [hierarchyHtml] = renderNestedHeadings(0, 1); // Start with H1 level (level 1)
+  const [hierarchyHtml] = renderNestedHeadings(0, 1);
   html += hierarchyHtml;
   html += `</div>`;
 
@@ -694,7 +706,6 @@ function buildHeadingHierarchy(headingElements) {
 
 function renderLinks(data) {
   if (!data || !data.content || !data.content.links) {
-    // Ensure the warning message also has the correct font size
     document.getElementById('links').innerHTML = `<div class="warn" style="font-size: 1rem;">No link data available.</div>`;
     return;
   }
@@ -706,7 +717,6 @@ function renderLinks(data) {
   let html = `<div class="card">`;
   html += `<div class="subtabs">`;
 
-  // Subtabs with audit icons + help titles
   html += subtabWithAudit("total", `All (${links.total})`);
   html += subtabWithAudit("internal", `Internal (${links.internal})`, audit.internalLinks, {
     description: "Internal links improve crawlability and distribute authority across the site.",
@@ -757,44 +767,7 @@ function renderLinks(data) {
 
       let linksContentHtml = '';
       if (filtered.length > 0) {
-        linksContentHtml = `
-          <style>
-            .link-item {
-              border: 1px solid #e5e7eb;
-              padding: 0.75rem;
-              margin-bottom: 0.75rem;
-              border-radius: 0.3rem;
-              background-color: #ffffff;
-              font-size: 1rem; /* Consistent with other text */
-            }
-            .link-item:last-child {
-              margin-bottom: 0;
-            }
-            .link-url {
-              font-weight: 600;
-              color: #2563eb;
-              word-break: break-all;
-            }
-            .link-text {
-              margin-top: 0.25rem;
-              color: #374151;
-              font-size: 1rem; /* Consistent with other text */
-            }
-            .link-meta {
-              font-size: 0.9rem; /* Slightly smaller for meta info */
-              color: #6b7280;
-              margin-top: 0.25rem;
-            }
-            .link-meta span {
-              margin-right: 0.75rem;
-            }
-            .link-warn {
-                color: #f97316;
-                font-size: 1rem; /* Ensure warning text is also 1rem */
-            }
-          </style>
-          <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-        `;
+        linksContentHtml = `<div class="links-container">`;
         linksContentHtml += filtered.map(l => `
           <div class="link-item">
             <div class="link-url"><a href="${l.href}" target="_blank">${l.href}</a></div>
@@ -806,8 +779,7 @@ function renderLinks(data) {
           </div>`).join('');
         linksContentHtml += `</div>`;
       } else {
-        // Apply the same styling to the warning message if no links are found
-        linksContentHtml = `<div class="warn" style="font-size: 1rem;">No links found for this category.</div>`;
+        linksContentHtml = `<div class="warn">No links found for this category.</div>`;
       }
 
       document.getElementById('links-detail').innerHTML = linksContentHtml;
@@ -837,8 +809,7 @@ function subtabWithAudit(key, label, auditField = null, help = null) {
 
 function renderImages(data) {
   if (!data || !data.content || !data.content.images) {
-    // Ensure the initial warning message also has the correct font size
-    document.getElementById('images').innerHTML = `<div class="warn" style="font-size: 1rem;">No image data available.</div>`;
+    document.getElementById('images').innerHTML = `<div class="warn">No image data available.</div>`;
     return;
   }
 
@@ -905,41 +876,7 @@ function renderImages(data) {
 
       let imagesContentHtml = '';
       if (displayImages.length > 0) {
-        imagesContentHtml = `
-          <style>
-            .image-item {
-              border: 1px solid #e5e7eb;
-              padding: 0.75rem;
-              margin-bottom: 0.75rem;
-              border-radius: 0.3rem;
-              background-color: #ffffff;
-              font-size: 1rem;
-            }
-            .image-item:last-child {
-              margin-bottom: 0;
-            }
-            .image-label {
-              font-weight: 600;
-            }
-            .image-source {
-              color: #2563eb;
-              word-break: break-all;
-            }
-            .image-alt-text, .image-srcset-status {
-              margin-top: 0.25rem;
-              color: #374151;
-              font-size: 1rem;
-            }
-            .image-warn {
-                color: #f97316;
-                font-size: 1rem; /* Ensure warning text within items is 1rem */
-            }
-            .warn { /* Style for the main warning message */
-                font-size: 1rem;
-            }
-          </style>
-          <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-        `;
+        imagesContentHtml = `<div class="images-container">`;
         imagesContentHtml += displayImages.map(img => `
           <div class="image-item">
             <div class="image-source"><span class="image-label">Source:</span> <a href="${img.src}" target="_blank">${img.src}</a></div>
@@ -948,8 +885,7 @@ function renderImages(data) {
           </div>`).join('');
         imagesContentHtml += `</div>`;
       } else {
-        // Apply inline style to the warning div for immediate effect
-        imagesContentHtml = `<div class="warn" style="font-size: 1rem;">No images found for this category.</div>`;
+        imagesContentHtml = `<div class="warn">No images found for this category.</div>`;
       }
 
       document.getElementById('images-detail').innerHTML = imagesContentHtml;
