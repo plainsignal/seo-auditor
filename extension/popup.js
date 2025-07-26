@@ -313,16 +313,6 @@ function renderOverview(data) {
     link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#linking"
   });
 
-  html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
-    description: "Indicates the primary language of the content, helping search engines serve users in their language.",
-    link: "https://www.w3.org/International/questions/qa-html-language-declarations"
-  });
-
-  html += renderBlock("Favicon", meta.favicon || "Missing", "favicon", "canonical", "", {
-    description: "Improves brand recognition and user experience in browser tabs, search results, and mobile devices.",
-    link: "https://developers.google.com/search/docs/appearance/favicon-in-search"
-  });
-
   html += renderBlock("Open Graph", (Object.keys(meta.og).length > 0 ? "Present" : "Missing"), "opengraph", "words", "", {
     description: "Enables better link previews when pages are shared on social media platforms.",
     link: "https://ogp.me/"
@@ -338,9 +328,19 @@ function renderOverview(data) {
     link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag"
   });
 
+  html += renderBlock("Favicon", meta.favicon || "Missing", "favicon", "canonical", "", {
+    description: "Improves brand recognition and user experience in browser tabs, search results, and mobile devices.",
+    link: "https://developers.google.com/search/docs/appearance/favicon-in-search"
+  });
+
   html += renderBlock("Charset", meta.charset || "Missing", "charset", "words", "", {
     description: "Declares character encoding to ensure correct rendering of text content.",
     link: "https://www.w3.org/International/articles/definitions-characters/#charset"
+  });
+
+  html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
+    description: "Indicates the primary language of the content, helping search engines serve users in their language.",
+    link: "https://www.w3.org/International/questions/qa-html-language-declarations"
   });
 
   html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "hreflang", {
