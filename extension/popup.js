@@ -652,8 +652,8 @@ function renderHeadings(data) {
           content = `<div class="warn" style="font-size: 1rem;">No hierarchical heading data to display.</div>`;
         }
       } else {
-        const list = headingContents[type].map(t => `<li class="list">${t}</li>`).join('');
-        content = list ? `<ul>${list}</ul>` : `<div class="warn" style="font-size: 1rem;">No ${type} tags found</div>`;
+        const list = headingContents[type].map(t => `<div class="heading-list-item">${t}</div>`).join('');
+        content = list ? `<div class="heading-list">${list}</div>` : `<div class="warn" style="font-size: 1rem;">No ${type} tags found</div>`;
       }
       document.getElementById('headings-detail').innerHTML = content;
     });
