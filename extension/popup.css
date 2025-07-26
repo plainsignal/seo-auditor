@@ -133,7 +133,7 @@ p {
   margin-bottom: 0.3rem;
 }
 
-#copy-report {
+#download-report {
   margin-right: 1rem;
   padding: 0.4rem 0.8rem;
   border: 1px solid #cbd5e1;
@@ -145,6 +145,7 @@ p {
 
 .overview-container {
   padding: 1rem;
+  background: #ffffff;
 }
 
 .suggestion {

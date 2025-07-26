@@ -921,19 +921,49 @@ function renderAll(data) {
   renderImages(data);
   renderTools();
   renderAbout();
-}
 
-document.getElementById('copy-report').addEventListener('click', () => {
-  let report = '';
-  const activeTab = document.querySelector('.tab-content.active');
-  if (activeTab) {
-    report = activeTab.innerText;
-  }
-  navigator.clipboard.writeText(report).then(() => {
-    const copyButton = document.getElementById('copy-report');
-    copyButton.textContent = 'Copied!';
-    setTimeout(() => {
-      copyButton.textContent = 'Copy Report';
-    }, 2000);
+  document.getElementById('download-report').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let y = 10;
+    const addSection = (title, content) => {
+      if (y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.setFontSize(16);
+      doc.text(title, 10, y);
+      y += 10;
+      doc.setFontSize(12);
+      doc.text(content, 10, y, { maxWidth: 180 });
+      y += content.split('\n').length * 5 + 10;
+    };
+
+    const overview = document.getElementById('overview').innerText;
+    addSection('Overview', overview);
+
+    const headings = document.getElementById('headings').innerText;
+    addSection('Headings', headings);
+
+    const links = document.getElementById('links').innerText;
+    addSection('Links', links);
+
+    const images = document.getElementById('images').innerText;
+    addSection('Images', images);
+
+    const meta = document.getElementById('meta').innerText;
+    addSection('Meta', meta);
+
+    const indexing = document.getElementById('indexing').innerText;
+    addSection('Indexing', indexing);
+
+    const tools = document.getElementById('tools').innerText;
+    addSection('Tools', tools);
+
+    doc.setFontSize(10);
+    doc.text('Generated with SEO Auditor Chrome Extension - https://prevue.me/chrome-extensions/seo-auditor', 10, 290);
+
+    doc.save('seo-audit-report.pdf');
   });
-});
+}
