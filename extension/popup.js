@@ -923,61 +923,14 @@ function renderAll(data) {
   renderAbout();
 
   document.getElementById('download-report').addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFontSize(22);
-    doc.text("SEO Audit Report", 105, 15, null, null, "center");
-    doc.setFontSize(12);
-    doc.text(`URL: ${currentUrl}`, 105, 25, null, null, "center");
-
-    let y = 40;
-    const addSection = (title, content) => {
-      if (y > 260) {
-        doc.addPage();
-        y = 15;
-      }
-      doc.setFontSize(16);
-      doc.text(title, 10, y);
-      y += 10;
-      doc.setFontSize(12);
-
-      const lines = doc.splitTextToSize(content, 180);
-      lines.forEach(line => {
-        if (y > 280) {
-          doc.addPage();
-          y = 15;
-        }
-        doc.text(line, 10, y);
-        y += 7;
-      });
-      y += 5;
+    const element = document.body;
+    const opt = {
+      margin:       0.5,
+      filename:     'seo-audit-report.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-
-    const overview = document.getElementById('overview').innerText;
-    addSection('Overview', overview);
-
-    const headings = document.getElementById('headings').innerText;
-    addSection('Headings', headings);
-
-    const links = document.getElementById('links').innerText;
-    addSection('Links', links);
-
-    const images = document.getElementById('images').innerText;
-    addSection('Images', images);
-
-    const meta = document.getElementById('meta').innerText;
-    addSection('Meta', meta);
-
-    const indexing = document.getElementById('indexing').innerText;
-    addSection('Indexing', indexing);
-
-    const tools = document.getElementById('tools').innerText;
-    addSection('Tools', tools);
-
-    doc.setFontSize(10);
-    doc.text('Generated with SEO Auditor Chrome Extension - https://prevue.me/chrome-extensions/seo-auditor', 105, 290, null, null, "center");
-
-    doc.save('seo-audit-report.pdf');
+    html2pdf().set(opt).from(element).save();
   });
 }
