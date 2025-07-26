@@ -248,104 +248,105 @@ function renderOverview(data) {
   const content = data.content;
   const accessibility = data.accessibility;
 
-  let html = `<div class="overview-container">`;
+  let html = `<div class="overview-container card">`;
 
-  html += `<div class="card"><h3>Core Vitals</h3>`;
   html += renderBlock("Title", meta.title, "title", "title", `${meta.title.length} chars`, {
     description: "The title tag defines the clickable headline in search results. It directly influences search ranking and click-through rate (CTR).",
     link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#title-link"
   });
+
   html += renderBlock("Description", meta.description, "description", "description", `${meta.description.length} chars`, {
     description: "Meta description summarizes page content and influences CTR, though not directly used for ranking.",
     link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#description"
   });
-  html += renderBlock("URL", data.url, "indexable", "url", data.indexable ? "Indexable" : "Noindex");
-  html += `</div>`;
 
-  html += `<div class="card"><h3>Indexability</h3>`;
+  html += renderBlock("URL", data.url, "indexable", "url", data.indexable ? "Indexable" : "Noindex");
+
   html += renderBlock("Canonical", meta.canonical || "Missing", "canonical", "canonical", "", {
     description: "Prevents duplicate content issues by indicating the preferred version of a page.",
     link: "https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
   });
+
   html += renderBlock("Robots Meta", meta.robotsTag || meta.xRobotsTag || "Missing", "robots", "robots", "", {
     description: "Controls whether search engines index or follow the page. Critical for controlling visibility.",
     link: "https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag"
   });
+
   html += renderBlock("Sitemap", (audit.sitemap.ok ? "Found" : "Missing"), "sitemap", "canonical", "", {
     description: "Helps search engines discover site URLs and crawl more efficiently.",
     link: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"
   });
-  html += `</div>`;
 
-  html += `<div class="card"><h3>LLM Optimization</h3>`;
   html += renderBlock("llms.txt", (audit.llmsTxt.ok ? "Found" : "Missing"), "llmsTxt", "llms", "", {
     description: "Indicates rules for LLMs (Large Language Models) accessing content. This file is similar in concept to `robots.txt` but specifically for controlling how AI models interact with your site's content for training and data collection.",
     link: "https://llmstxt.org/",
     externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
     externalLinkTitle: "Generate with Chrome Extension"
   });
+
   html += renderBlock("llms-full.txt", (audit.llmsFullTxt.ok ? "Found" : "Missing"), "llmsFullTxt", "llms", "", {
     description: "A more comprehensive version of `llms.txt`, providing more detailed instructions or broader scope for LLM interaction with your site. It can include specific paths, content types, or usage policies for AI models.",
     link: "https://llmstxt.org/",
     externalLink: "https://chromewebstore.google.com/detail/llmstxt-generator/hkfhiobimmpeimihkebmpmppjlkofjie",
     externalLinkTitle: "Generate with Chrome Extension"
   });
-  html += `</div>`;
 
-  html += `<div class="card"><h3>Content</h3>`;
   html += `
     <div class="section-block">
       <div class="section-title-left">${icon("headings")} Headings</div>
       <div class="section-value"><strong>H1:</strong> ${content.headings.H1}, <strong>H2:</strong> ${content.headings.H2}, <strong>H3:</strong> ${content.headings.H3}, <strong>H4:</strong> ${content.headings.H4}, <strong>H5:</strong> ${content.headings.H5}, <strong>H6:</strong> ${content.headings.H6}</div>
       ${audit.h1 && !audit.h1.ok ? `<div class="suggestion">${audit.h1.reason}</div>` : ""}
     </div>`;
+
   html += renderBlock("Words", `<strong>Words:</strong> ${data.wordCount}, <strong>Characters:</strong> ${data.charCount}`, "words", "words", "", {
     description: "Sufficient content length helps cover topics thoroughly; very thin pages may be seen as low-quality.",
     link: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
   });
+
   html += renderBlock("Images", `<strong>Total:</strong> ${content.images.withAlt + content.images.withoutAlt}, <strong>Missing alt:</strong> ${content.images.withoutAlt}, <strong>Missing srcset:</strong> ${content.images.listWithoutSrcset.length}`, "images", "images", "", {
     description: "Alt text improves accessibility and allows image indexing; srcset enables responsive images.",
     link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset"
   });
+
   html += renderBlock("Links", `<strong>Total:</strong> ${content.links.total}, <strong>Internal:</strong> ${content.links.internal}, <strong>External:</strong> ${content.links.external}, <strong>Unique:</strong> ${content.links.uniq}, <strong>Empty text:</strong> ${content.links.emptyText}, <strong>Short text:</strong> ${content.links.shortText}`, "links", "links", "", {
     description: "Balanced internal and external linking improves crawlability, authority flow, and navigation.",
     link: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide#linking"
   });
-  html += `</div>`;
 
-  html += `<div class="card"><h3>Accessibility & Social</h3>`;
   html += renderBlock("Language", accessibility.lang || "Missing", "language", "language", "", {
     description: "Indicates the primary language of the content, helping search engines serve users in their language.",
     link: "https://www.w3.org/International/questions/qa-html-language-declarations"
   });
+
   html += renderBlock("Favicon", meta.favicon || "Missing", "favicon", "canonical", "", {
     description: "Improves brand recognition and user experience in browser tabs, search results, and mobile devices.",
     link: "https://developers.google.com/search/docs/appearance/favicon-in-search"
   });
+
   html += renderBlock("Open Graph", (Object.keys(meta.og).length > 0 ? "Present" : "Missing"), "opengraph", "words", "", {
     description: "Enables better link previews when pages are shared on social media platforms.",
     link: "https://ogp.me/"
   });
+
   html += renderBlock("JSON-LD", (meta.jsonld.length > 0 ? "Present" : "Missing"), "jsonld", "words", "", {
     description: "Allows structured data markup to improve search appearance with rich snippets and special features.",
     link: "https://schema.org/docs/gs.html"
   });
-  html += `</div>`;
 
-  html += `<div class="card"><h3>Technical</h3>`;
   html += renderBlock("Viewport", meta.viewport || "Missing", "viewport", "words", "", {
     description: "Enables responsive design by controlling how a page scales on mobile devices.",
     link: "https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag"
   });
+
   html += renderBlock("Charset", meta.charset || "Missing", "charset", "words", "", {
     description: "Declares character encoding to ensure correct rendering of text content.",
     link: "https://www.w3.org/International/articles/definitions-characters/#charset"
   });
+
   html += renderBlock("Hreflang", (audit.hreflang.ok ? "Found" : "Missing"), "hreflang", "hreflang", "hreflang", {
     description: "The hreflang attribute tells search engines which language or regional version of a page to show to users. It prevents duplicate content issues across localized pages and improves international search targeting.",
     link: "https://developers.google.com/search/docs/specialty/international/localized-versions"
   });
-  html += `</div>`;
 
   html += `</div>`;
   document.getElementById('overview').innerHTML = html;

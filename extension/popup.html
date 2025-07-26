@@ -7,16 +7,26 @@
 body {
   font-family: system-ui, sans-serif;
   margin: 0;
-  padding: 0rem;
+  padding: 0;
   width: 728px;
   background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .footer {
   font-size: 0.8rem;
   text-align: right;
-  padding: 0 1rem 0.5rem 0;
+  padding: 1rem;
   color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.tab-content {
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 h1 {
@@ -150,7 +160,7 @@ p {
 }
 
 .overview-container {
-  padding: 1rem;
+  padding: 1.25rem;
   background: #ffffff;
 }
 
